@@ -2,43 +2,79 @@ package controller;
 
 import model.ConnectionModel;
 
-import javax.net.ssl.SSLSocket;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.Socket;
+import java.security.SecureRandom;
 
 public class ConnectionController {
 
-    private ConnectionModel connection;
+    SSLContext sslContext;
+    TrustManager[] trustManagers = {new X509TrustManager() {
+        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+        }
 
-    private Socket socket;
-    private SSLSocket sslSocket;
+        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+        }
 
-    private InputStream inputStream;
-    private OutputStream outputStream;
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+    }};
 
-    public ConnectionController(String host, int port, String username, String password) {
-        connection = new ConnectionModel(host, port, username, password);
+    public ConnectionController() {
+        try {
+            sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustManagers, new SecureRandom());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public Socket InitConnection(){
-        //todo
+    public SSLSocket initConnectionWithSSL(ConnectionModel connection) {
+        SSLSocket sslSocket;
 
-        return socket;
-    }
+        try {
+            sslSocket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(connection.getHost(), connection.getPort());
+            sslSocket.startHandshake();
 
-    public SSLSocket InitConnectionWithSSL(){
-        //todo
+            connection.setSSLSocket(sslSocket);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
         return sslSocket;
     }
 
-    public void writeLine(){
-        //todo
+    public SSLSocket initConnectionWithTSL(ConnectionModel connection) {
+        SSLSocket sslSocket;
+
+        try {
+            Socket socket = new Socket(connection.getHost(), connection.getPort());
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+            writer.println("STARTTLS");
+            sslSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(socket, "smtp.qq.com", 587, true);
+            sslSocket.startHandshake();
+
+            connection.setSSLSocket(sslSocket);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return sslSocket;
     }
 
-    public void readLine(){
-        //todo
+    public void checkConnection(ConnectionModel connection) {
+        SSLSocket sslSocket = connection.getSSLSocket();
+        if (!sslSocket.isConnected()) {
+            if (connection.getType() == 0)
+                initConnectionWithSSL(connection);
+            else
+                initConnectionWithTSL(connection);
+        }
     }
 
 }

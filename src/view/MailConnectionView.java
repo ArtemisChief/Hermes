@@ -38,6 +38,14 @@ public class MailConnectionView extends JFrame {
         mailScrollPane = new JScrollPane();
         mailTable = new JTable();
         settingPanel = new JPanel();
+        popTxtField = new JTextField();
+        label5 = new JLabel();
+        label6 = new JLabel();
+        smtpTxtField = new JTextField();
+        label7 = new JLabel();
+        mailTxtField = new JTextField();
+        pwdTxtField = new JTextField();
+        label8 = new JLabel();
 
         //======== this ========
         setResizable(false);
@@ -233,15 +241,96 @@ public class MailConnectionView extends JFrame {
                 settingPanel.setAlignmentY(0.0F);
                 settingPanel.setAlignmentX(0.0F);
 
+                //---- popTxtField ----
+                popTxtField.setBorder(new EtchedBorder());
+                popTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- label5 ----
+                label5.setText("POP3 Address");
+                label5.setHorizontalAlignment(SwingConstants.RIGHT);
+                label5.setLabelFor(popTxtField);
+                label5.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- label6 ----
+                label6.setText("SMTP Address");
+                label6.setHorizontalAlignment(SwingConstants.RIGHT);
+                label6.setLabelFor(smtpTxtField);
+                label6.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- smtpTxtField ----
+                smtpTxtField.setBorder(new EtchedBorder());
+                smtpTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- label7 ----
+                label7.setText("Mail Address");
+                label7.setHorizontalAlignment(SwingConstants.RIGHT);
+                label7.setLabelFor(mailTxtField);
+                label7.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- mailTxtField ----
+                mailTxtField.setBorder(new EtchedBorder());
+                mailTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- pwdTxtField ----
+                pwdTxtField.setBorder(new EtchedBorder());
+                pwdTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
+                //---- label8 ----
+                label8.setText("Password");
+                label8.setHorizontalAlignment(SwingConstants.RIGHT);
+                label8.setLabelFor(pwdTxtField);
+                label8.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+
                 GroupLayout settingPanelLayout = new GroupLayout(settingPanel);
                 settingPanel.setLayout(settingPanelLayout);
                 settingPanelLayout.setHorizontalGroup(
                     settingPanelLayout.createParallelGroup()
-                        .addGap(0, 1018, Short.MAX_VALUE)
+                        .addGroup(settingPanelLayout.createSequentialGroup()
+                            .addGap(14, 14, 14)
+                            .addGroup(settingPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addGroup(settingPanelLayout.createSequentialGroup()
+                                    .addComponent(label8, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(27, 27, 27)
+                                    .addComponent(pwdTxtField, GroupLayout.PREFERRED_SIZE, 789, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(settingPanelLayout.createSequentialGroup()
+                                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(27, 27, 27)
+                                    .addComponent(mailTxtField, GroupLayout.PREFERRED_SIZE, 789, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(settingPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(settingPanelLayout.createSequentialGroup()
+                                        .addComponent(label6, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(smtpTxtField, GroupLayout.PREFERRED_SIZE, 789, GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(settingPanelLayout.createSequentialGroup()
+                                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(popTxtField, GroupLayout.PREFERRED_SIZE, 789, GroupLayout.PREFERRED_SIZE))))
+                            .addContainerGap(69, Short.MAX_VALUE))
                 );
                 settingPanelLayout.setVerticalGroup(
                     settingPanelLayout.createParallelGroup()
-                        .addGap(0, 511, Short.MAX_VALUE)
+                        .addGroup(settingPanelLayout.createSequentialGroup()
+                            .addGap(16, 16, 16)
+                            .addGroup(settingPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(label5)
+                                .addComponent(popTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(settingPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(smtpTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label6))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(settingPanelLayout.createParallelGroup()
+                                .addGroup(settingPanelLayout.createSequentialGroup()
+                                    .addGap(4, 4, 4)
+                                    .addComponent(label7))
+                                .addComponent(mailTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(settingPanelLayout.createParallelGroup()
+                                .addGroup(settingPanelLayout.createSequentialGroup()
+                                    .addGap(4, 4, 4)
+                                    .addComponent(label8))
+                                .addComponent(pwdTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addContainerGap(369, Short.MAX_VALUE))
                 );
             }
             tabbedPane2.addTab("Setting", settingPanel);
@@ -269,5 +358,13 @@ public class MailConnectionView extends JFrame {
     private JScrollPane mailScrollPane;
     private JTable mailTable;
     private JPanel settingPanel;
+    private JTextField popTxtField;
+    private JLabel label5;
+    private JLabel label6;
+    private JTextField smtpTxtField;
+    private JLabel label7;
+    private JTextField mailTxtField;
+    private JTextField pwdTxtField;
+    private JLabel label8;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

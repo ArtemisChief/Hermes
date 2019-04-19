@@ -138,12 +138,60 @@ new FormModel {
 					"title": "Mail Box"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:1018:x}"
-					"$verticalGroup": "par l {space :0:511:x}"
+					"$horizontalGroup": "par l {seq l {space :p:14:p, par t {seq {comp label8:::p:119:p, space :27:27:p, comp pwdTxtField:::p:789:p}, seq {comp label7:::p:119:p, space :27:27:p, comp mailTxtField:::p:789:p}, par t:::p {seq {comp label6:::p:119:p, space :::x, comp smtpTxtField:::p:789:p}, seq {comp label5:::p:119:p, space :p:27:p, comp popTxtField:::p:789:p}}}, space ::69:x}}"
+					"$verticalGroup": "par l {seq l {space :p:16:p, par b {comp label5::b:p::p, comp popTxtField::b:p::p}, space :::p, par b {comp smtpTxtField::b:p::p, comp label6::b:p::p}, space :::p, par l {seq l {space :4:4:p, comp label7:::p::p}, comp mailTxtField:::p::p}, space :::p, par l {seq l {space :4:4:p, comp label8:::p::p}, comp pwdTxtField:::p::p}, space ::369:x}}"
 				} ) {
 					name: "settingPanel"
 					"alignmentY": 0.0f
 					"alignmentX": 0.0f
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "popTxtField"
+						"border": #EtchedBorder0
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label5"
+						"text": "POP3 Address"
+						"horizontalAlignment": 4
+						"labelFor": new FormReference( "popTxtField" )
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label6"
+						"text": "SMTP Address"
+						"horizontalAlignment": 4
+						"labelFor": new FormReference( "smtpTxtField" )
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "smtpTxtField"
+						"border": #EtchedBorder0
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label7"
+						"text": "Mail Address"
+						"horizontalAlignment": 4
+						"labelFor": new FormReference( "mailTxtField" )
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "mailTxtField"
+						"border": #EtchedBorder0
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "pwdTxtField"
+						"border": #EtchedBorder0
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label8"
+						"text": "Password"
+						"horizontalAlignment": 4
+						"labelFor": new FormReference( "pwdTxtField" )
+						"font": #Font0
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Setting"
 				} )
