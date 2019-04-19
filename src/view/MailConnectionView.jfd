@@ -138,8 +138,8 @@ new FormModel {
 					"title": "Mail Box"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {seq l {space :p:14:p, par t {seq {comp label8:::p:119:p, space :27:27:p, comp pwdTxtField:::p:789:p}, seq {comp label7:::p:119:p, space :27:27:p, comp mailTxtField:::p:789:p}, par t:::p {seq {comp label6:::p:119:p, space :::x, comp smtpTxtField:::p:789:p}, seq {comp label5:::p:119:p, space :p:27:p, comp popTxtField:::p:789:p}}}, space ::69:x}}"
-					"$verticalGroup": "par l {seq l {space :p:16:p, par b {comp label5::b:p::p, comp popTxtField::b:p::p}, space :::p, par b {comp smtpTxtField::b:p::p, comp label6::b:p::p}, space :::p, par l {seq l {space :4:4:p, comp label7:::p::p}, comp mailTxtField:::p::p}, space :::p, par l {seq l {space :4:4:p, comp label8:::p::p}, comp pwdTxtField:::p::p}, space ::369:x}}"
+					"$horizontalGroup": "par l {seq l {space :p:14:p, par l {seq l {par t {comp label5:::p:119:p, comp label6:::p:119:p}, space s:::p, par l {comp smtpTxtField:::p:358:p, comp popTxtField:::::x}, space :p:12:p, par l {comp label10:::p:113:p, comp label9:::p:115:p}}, seq l {comp label7:::p:119:p, space s:::p, comp mailTxtField:::p:358:p, space u:::p, comp label8:::p:113:p}}, space s:::p, par l:::p {comp pwdTxtField::l::300:x, comp smtpPortTxtField::l::300:x, comp popPortTxtField::l::300:x}, space ::64:x}}"
+					"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp label5::b:p::p, comp label9::b:p::p, comp popTxtField::b:p::p, comp popPortTxtField::b:p::p}, space :::p, par b {comp label6::b:p::p, comp smtpTxtField::b:p::p, comp label10::b:p::p, comp smtpPortTxtField::b:p::p}, space :::p, par b {comp label7::b:p::p, comp label8::b:p::p, comp pwdTxtField::b:p::p, comp mailTxtField::b:p::p}, space ::406:x}}"
 				} ) {
 					name: "settingPanel"
 					"alignmentY": 0.0f
@@ -190,6 +190,30 @@ new FormModel {
 						"text": "Password"
 						"horizontalAlignment": 4
 						"labelFor": new FormReference( "pwdTxtField" )
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "popPortTxtField"
+						"border": #EtchedBorder0
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label9"
+						"text": "POP3 Port"
+						"horizontalAlignment": 4
+						"labelFor": new FormReference( "popPortTxtField" )
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label10"
+						"text": "SMTP Port"
+						"horizontalAlignment": 4
+						"labelFor": new FormReference( "smtpPortTxtField" )
+						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "smtpPortTxtField"
+						"border": #EtchedBorder0
 						"font": #Font0
 					} )
 				}, new FormLayoutConstraints( null ) {
