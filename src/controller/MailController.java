@@ -2,10 +2,14 @@ package controller;
 
 import model.ConnectionModel;
 import model.MailModel;
+import sun.misc.BASE64Decoder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MailController {
 
@@ -29,13 +33,26 @@ public class MailController {
             if (top.contains("-ERR"))
                 break;
 
-            //todo
-            String to = "";
-            String subject = "";
-            String from = "";
-            Date date = new Date();
-            MailModel mail = new MailModel(i, to, subject, from, date);
-            mailBox.add(mail);
+            String to = Pattern.compile("To: .*\\n").matcher(top).group().substring(4);
+            if(to.contains("=?"))
+                to=decode(to);
+            String subject = Pattern.compile("Subject: .*\\n").matcher(top).group().substring(9);
+            if(subject.contains("=?"))
+                subject=decode(subject);
+            String from = Pattern.compile("From: .*\\n").matcher(top).group().substring(6);
+            if(from.contains("=?"))
+                from=decode(from);
+            String sDate=Pattern.compile("Date: .*\\n").matcher(top).group().substring(6);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss X");
+            try {
+                Date date = formatter.parse(sDate);
+                MailModel mail = new MailModel(i, to, subject, from, date);
+                mailBox.add(mail);
+            }
+            catch (Exception e){
+            }
+
         }
 
         POP3Connection.close();
@@ -51,6 +68,7 @@ public class MailController {
 
             content = POP3Connection.writeAndReadLine("RETR " + idx);
             //todo
+
             mail.setContent(content);
 
             POP3Connection.close();
@@ -91,6 +109,21 @@ public class MailController {
 
     public ArrayList<MailModel> getMailBox() {
         return mailBox;
+    }
+
+    public String decode(String s){
+        int start=s.indexOf("=?");
+        int end=s.indexOf("?=");
+        String gbkString=s.substring(start+8,end);
+        BASE64Decoder decoder = new BASE64Decoder();
+        try {
+            byte[] b = decoder.decodeBuffer(gbkString);
+            gbkString=new String(b,s.substring(start+2,s.indexOf("?B?")));
+            s.replaceAll("=\\?.*\\?=",gbkString);
+        }
+        catch (Exception e){
+        }
+        return s;
     }
 
 }
