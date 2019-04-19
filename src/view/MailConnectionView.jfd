@@ -14,8 +14,8 @@ new FormModel {
 				"alignmentY": 0.0f
 				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {seq l {space :p:12:p, par t {comp label2:::p:62:p, comp label1:::p:62:p, comp label3::t:p::p, comp label4:::p:62:p}, space u:::p, par l {comp sendBtn:::p:82:p, par t:::p {comp contentScrollPane::l::918:x, comp toTxtField::l::918:x, comp subjectTxtField::l::918:x, comp fromTxtField::::918:x}}, space ::14:x}}"
-					"$verticalGroup": "par l {seq {space :::p, par b {comp toTxtField::b:p::p, comp label1::b:p::p}, space :::p, par b {comp subjectTxtField::b:p::p, comp label2::b:p::p}, space :::p, par l {comp contentScrollPane::::361:x, seq {comp label3:::p::p, space :0:339:x}}, space :::p, par b {comp fromTxtField::b:p::p, comp label4::b:p::p}, space :::p, comp sendBtn:::p::p, space :::p}}"
+					"$horizontalGroup": "par l {seq l {space :::p, par l {par t:::p {comp label1::::62:x, comp label3::t::62:x, comp label4::t::62:x}, comp label2::l:p:62:p}, space :18:18:p, par l:::p {comp sendBtn:::p:82:p, comp contentScrollPane::l::904:x, comp fromTxtField::l::904:x, comp subjectTxtField::l::904:x, comp toTxtField::l::904:x}, space ::28:x}}"
+					"$verticalGroup": "par l {seq {space :p:10:p, par b {comp label1::b:p::p, comp toTxtField::b:p::p}, space :::p, par b {comp label2::b:p::p, comp subjectTxtField::b:p::p}, space :::p, par l {seq {comp label3:::p::p, space :0:347:x}, comp contentScrollPane::::366:x}, space :::p, par b {comp label4::b:p::p, comp fromTxtField::b:p::p}, space :::p, comp sendBtn:::p::p, space :::p}}"
 				} ) {
 					name: "composePanel"
 					"alignmentY": 0.0f
@@ -23,14 +23,14 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JTextField" ) {
 						name: "toTxtField"
 						"border": &EtchedBorder0 new javax.swing.border.EtchedBorder( 1, null, null )
-						"font": &Font0 new java.awt.Font( "Microsoft YaHei UI", 0, 16 )
+						"font": &Font0 new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label1"
 						"text": "To"
 						"horizontalAlignment": 4
 						"labelFor": &FormReference0 new FormReference( "toTxtField" )
-						"font": &Font1 new java.awt.Font( "Microsoft YaHei UI", 0, 16 )
+						"font": #Font0
 					} )
 					add( new FormComponent( "javax.swing.JTextField" ) {
 						name: "subjectTxtField"
@@ -42,7 +42,7 @@ new FormModel {
 						"text": "Subject"
 						"horizontalAlignment": 4
 						"labelFor": new FormReference( "subjectTxtField" )
-						"font": #Font1
+						"font": #Font0
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "contentScrollPane"
@@ -57,7 +57,7 @@ new FormModel {
 						name: "label3"
 						"text": "Content"
 						"horizontalAlignment": 4
-						"font": #Font1
+						"font": #Font0
 						"labelFor": new FormReference( "contentTxtArea" )
 					} )
 					add( new FormComponent( "javax.swing.JTextField" ) {
@@ -70,19 +70,19 @@ new FormModel {
 						"text": "From"
 						"horizontalAlignment": 4
 						"labelFor": #FormReference0
-						"font": #Font1
+						"font": #Font0
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "sendBtn"
 						"text": "Send"
 						"focusPainted": false
-						"font": #Font1
+						"font": #Font0
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Compose"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {comp mailScrollPane::t::1018:x}"
+					"$horizontalGroup": "par l {comp mailScrollPane::t:p:1018:p}"
 					"$verticalGroup": "par l {seq t {space :0:20:x, comp mailScrollPane:::p:491:p}}"
 				} ) {
 					name: "mailBoxPanel"
@@ -92,10 +92,46 @@ new FormModel {
 						name: "mailScrollPane"
 						"alignmentX": 0.0f
 						"alignmentY": 0.0f
+						"horizontalScrollBarPolicy": 31
+						"verticalScrollBarPolicy": 22
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "mailTable"
 							"alignmentY": 0.0f
 							"alignmentX": 0.0f
+							"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+								add( new java.util.Vector {
+									add( "aa" )
+									add( "cc" )
+									add( null )
+								} )
+								add( new java.util.Vector {
+									add( "bb" )
+									add( "dd" )
+									add( null )
+								} )
+							}, new java.util.Vector {
+								add( "From" )
+								add( "Subject" )
+								add( "time" )
+							}, new java.util.Vector {
+								add( class java.lang.String )
+								add( class java.lang.String )
+								add( class java.util.Date )
+							}, new java.util.Vector {
+								add( false )
+								add( false )
+								add( false )
+							}, new java.util.Vector {
+								add( new com.jformdesigner.model.SwingTableColumn( null, 200, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 650, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 137, 0, 0, false ) )
+							} )
+							"selectionMode": 0
+							"autoCreateRowSorter": true
+							"focusable": false
+							"fillsViewportHeight": true
+							"autoResizeMode": 0
 						} )
 					} )
 				}, new FormLayoutConstraints( null ) {

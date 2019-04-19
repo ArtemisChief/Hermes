@@ -1,9 +1,10 @@
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
-import view.MailSocketView;
+import view.MailConnectionView;
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
+
         try {
             System.setProperty("sun.java2d.noddraw", "true");
             UIManager.put("RootPane.setupButtonVisible", false);
@@ -14,7 +15,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        MailSocketView mailSocketView = new MailSocketView();
-        mailSocketView.setVisible(true);
+        MailConnectionView mailConnectionView = new MailConnectionView();
+        mailConnectionView.setVisible(true);
     }
+
 }

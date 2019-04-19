@@ -5,16 +5,17 @@
 package view;
 
 import java.awt.*;
-import java.io.*;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.*;
 
 /**
  * @author Chief
  */
-public class MailSocketView extends JFrame {
+public class MailConnectionView extends JFrame {
 
-    public MailSocketView() {
+    public MailConnectionView() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -57,23 +58,23 @@ public class MailSocketView extends JFrame {
 
                 //---- toTxtField ----
                 toTxtField.setBorder(new EtchedBorder());
-                toTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                toTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 //---- label1 ----
                 label1.setText("To");
                 label1.setHorizontalAlignment(SwingConstants.RIGHT);
                 label1.setLabelFor(toTxtField);
-                label1.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                label1.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 //---- subjectTxtField ----
                 subjectTxtField.setBorder(new EtchedBorder());
-                subjectTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                subjectTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 //---- label2 ----
                 label2.setText("Subject");
                 label2.setHorizontalAlignment(SwingConstants.RIGHT);
                 label2.setLabelFor(subjectTxtField);
-                label2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                label2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 //======== contentScrollPane ========
                 {
@@ -81,73 +82,73 @@ public class MailSocketView extends JFrame {
 
                     //---- contentTxtArea ----
                     contentTxtArea.setBorder(new EtchedBorder());
-                    contentTxtArea.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                    contentTxtArea.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
                     contentScrollPane.setViewportView(contentTxtArea);
                 }
 
                 //---- label3 ----
                 label3.setText("Content");
                 label3.setHorizontalAlignment(SwingConstants.RIGHT);
-                label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                label3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
                 label3.setLabelFor(contentTxtArea);
 
                 //---- fromTxtField ----
                 fromTxtField.setBorder(new EtchedBorder());
-                fromTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                fromTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 //---- label4 ----
                 label4.setText("From");
                 label4.setHorizontalAlignment(SwingConstants.RIGHT);
                 label4.setLabelFor(toTxtField);
-                label4.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                label4.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 //---- sendBtn ----
                 sendBtn.setText("Send");
                 sendBtn.setFocusPainted(false);
-                sendBtn.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+                sendBtn.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
                 GroupLayout composePanelLayout = new GroupLayout(composePanel);
                 composePanel.setLayout(composePanelLayout);
                 composePanelLayout.setHorizontalGroup(
                     composePanelLayout.createParallelGroup()
                         .addGroup(composePanelLayout.createSequentialGroup()
-                            .addGap(12, 12, 12)
-                            .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label1, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label3)
-                                .addComponent(label4, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addContainerGap()
                             .addGroup(composePanelLayout.createParallelGroup()
-                                .addComponent(sendBtn, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
                                 .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(contentScrollPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)
-                                    .addComponent(toTxtField, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)
-                                    .addComponent(subjectTxtField, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)
-                                    .addComponent(fromTxtField, GroupLayout.DEFAULT_SIZE, 918, Short.MAX_VALUE)))
-                            .addContainerGap(14, Short.MAX_VALUE))
+                                    .addComponent(label1, GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                                    .addComponent(label3, GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                                    .addComponent(label4, GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE))
+                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(sendBtn, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
+                                .addComponent(fromTxtField, GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
+                                .addComponent(subjectTxtField, GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE)
+                                .addComponent(toTxtField, GroupLayout.DEFAULT_SIZE, 904, Short.MAX_VALUE))
+                            .addContainerGap(28, Short.MAX_VALUE))
                 );
                 composePanelLayout.setVerticalGroup(
                     composePanelLayout.createParallelGroup()
                         .addGroup(composePanelLayout.createSequentialGroup()
-                            .addContainerGap()
+                            .addGap(10, 10, 10)
                             .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(toTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label1))
+                                .addComponent(label1)
+                                .addComponent(toTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(subjectTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label2))
+                                .addComponent(label2)
+                                .addComponent(subjectTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(composePanelLayout.createParallelGroup()
-                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                                 .addGroup(composePanelLayout.createSequentialGroup()
                                     .addComponent(label3)
-                                    .addGap(0, 339, Short.MAX_VALUE)))
+                                    .addGap(0, 347, Short.MAX_VALUE))
+                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(fromTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label4))
+                                .addComponent(label4)
+                                .addComponent(fromTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(sendBtn)
                             .addContainerGap())
@@ -164,10 +165,51 @@ public class MailSocketView extends JFrame {
                 {
                     mailScrollPane.setAlignmentX(0.0F);
                     mailScrollPane.setAlignmentY(0.0F);
+                    mailScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                    mailScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
                     //---- mailTable ----
                     mailTable.setAlignmentY(0.0F);
                     mailTable.setAlignmentX(0.0F);
+                    mailTable.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+                    mailTable.setModel(new DefaultTableModel(
+                        new Object[][] {
+                            {"aa", "cc", null},
+                            {"bb", "dd", null},
+                        },
+                        new String[] {
+                            "From", "Subject", "time"
+                        }
+                    ) {
+                        Class<?>[] columnTypes = new Class<?>[] {
+                            String.class, String.class, Date.class
+                        };
+                        boolean[] columnEditable = new boolean[] {
+                            false, false, false
+                        };
+                        @Override
+                        public Class<?> getColumnClass(int columnIndex) {
+                            return columnTypes[columnIndex];
+                        }
+                        @Override
+                        public boolean isCellEditable(int rowIndex, int columnIndex) {
+                            return columnEditable[columnIndex];
+                        }
+                    });
+                    {
+                        TableColumnModel cm = mailTable.getColumnModel();
+                        cm.getColumn(0).setResizable(false);
+                        cm.getColumn(0).setPreferredWidth(200);
+                        cm.getColumn(1).setResizable(false);
+                        cm.getColumn(1).setPreferredWidth(650);
+                        cm.getColumn(2).setResizable(false);
+                        cm.getColumn(2).setPreferredWidth(137);
+                    }
+                    mailTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    mailTable.setAutoCreateRowSorter(true);
+                    mailTable.setFocusable(false);
+                    mailTable.setFillsViewportHeight(true);
+                    mailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                     mailScrollPane.setViewportView(mailTable);
                 }
 
@@ -175,7 +217,7 @@ public class MailSocketView extends JFrame {
                 mailBoxPanel.setLayout(mailBoxPanelLayout);
                 mailBoxPanelLayout.setHorizontalGroup(
                     mailBoxPanelLayout.createParallelGroup()
-                        .addComponent(mailScrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1018, Short.MAX_VALUE)
+                        .addComponent(mailScrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 1018, GroupLayout.PREFERRED_SIZE)
                 );
                 mailBoxPanelLayout.setVerticalGroup(
                     mailBoxPanelLayout.createParallelGroup()
