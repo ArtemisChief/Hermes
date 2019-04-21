@@ -105,7 +105,7 @@ public class Decode {
                 String decodeString = str.substring(start + 3, end);
                 try {
                     byte[] qp = decodeString.getBytes(str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
-                    decodeString = Decode.Qdecode(qp, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
+                    decodeString = Qdecode(qp, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
                     str = str.replaceFirst("=\\?.*\\?=", decodeString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -133,15 +133,15 @@ public class Decode {
             } else if (contentInfo.contains("quoted-printable")) {
                 if (contentInfo.contains("GB") || contentInfo.contains("gb")) {
                     byte[] bytes = content.getBytes("GBK");
-                    content = Decode.Qdecode(bytes, "GBK");
+                    content = Qdecode(bytes, "GBK");
 
                 } else if (contentInfo.contains("utf-8") || contentInfo.contains("UTF-8")) {
                     byte[] bytes = content.getBytes("UTF-8");
-                    content = Decode.Qdecode(bytes, "UTF-8");
+                    content = Qdecode(bytes, "UTF-8");
 
                 } else if (contentInfo.contains("ISO-8859-1") || contentInfo.contains("iso-8859-1")) {
                     byte[] bytes = content.getBytes("ISO-8859-1");
-                    content = Decode.Qdecode(bytes, "ISO-8859-1");
+                    content = Qdecode(bytes, "ISO-8859-1");
                 }
             }
         } catch (Exception e) {

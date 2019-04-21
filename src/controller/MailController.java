@@ -96,6 +96,7 @@ public class MailController {
             else {
                 content = "不支持的邮件正文格式（非纯文本或html）";
                 mail.setContent(content);
+                POP3Connection.close();
                 return mail;
             }
 
@@ -109,6 +110,7 @@ public class MailController {
                 if (!content.contains(boundary + "\n" + type)) {
                     content = "不支持的邮件正文格式（非纯文本或html）";
                     mail.setContent(content);
+                    POP3Connection.close();
                     return mail;
                 }
                 contentInfo = content.substring(content.indexOf(boundary + "\n" + type), content.indexOf("\n\n", content.indexOf(boundary + "\n" + type)));
@@ -123,9 +125,7 @@ public class MailController {
 
             // 进行解码
             content = Decode.ContentDecode(contentInfo, content);
-
             mail.setContent(content);
-
             POP3Connection.close();
         }
 
