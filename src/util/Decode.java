@@ -3,6 +3,7 @@ package util;
 import sun.misc.BASE64Decoder;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class Decode {
@@ -69,18 +70,30 @@ public class Decode {
         return retlen;
     }
 
-    /**
-     * @param qp  Byte array to HeaderDecode
-     * @param enc The character encoding of the returned string
-     * @return The decoded string.
-     */
-    private static String Qdecode(byte[] qp, String enc) {
+    private static String Qdecode(String str, String enc) {
+        byte[] qp;
+
+        try {
+            qp = str.getBytes(enc);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+
         int len = Qdecode(qp);
+
         try {
             return new String(qp, 0, len, enc);
         } catch (UnsupportedEncodingException e) {
             return new String(qp, 0, len);
         }
+    }
+
+    private static String Qdecode(String str, Charset enc) {
+        byte[] qp = str.getBytes(enc);
+        int len = Qdecode(qp);
+
+        return new String(qp, 0, len, enc);
     }
 
     public static String HeaderDecode(String str) {
@@ -104,8 +117,7 @@ public class Decode {
                 int start = str.indexOf("?Q?");
                 String decodeString = str.substring(start + 3, end);
                 try {
-                    byte[] qp = decodeString.getBytes(str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
-                    decodeString = Qdecode(qp, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
+                    decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
                     str = str.replaceFirst("=\\?.*\\?=", decodeString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -132,16 +144,13 @@ public class Decode {
 
             } else if (contentInfo.contains("quoted-printable")) {
                 if (contentInfo.contains("GB") || contentInfo.contains("gb")) {
-                    byte[] bytes = content.getBytes("GBK");
-                    content = Qdecode(bytes, "GBK");
+                    content = Qdecode(content, "GBK");
 
                 } else if (contentInfo.contains("utf-8") || contentInfo.contains("UTF-8")) {
-                    byte[] bytes = content.getBytes("UTF-8");
-                    content = Qdecode(bytes, "UTF-8");
+                    content = Qdecode(content, StandardCharsets.UTF_8);
 
                 } else if (contentInfo.contains("ISO-8859-1") || contentInfo.contains("iso-8859-1")) {
-                    byte[] bytes = content.getBytes("ISO-8859-1");
-                    content = Qdecode(bytes, "ISO-8859-1");
+                    content = Qdecode(content, StandardCharsets.ISO_8859_1);
                 }
             }
         } catch (Exception e) {
