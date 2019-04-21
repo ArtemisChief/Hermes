@@ -77,7 +77,6 @@ new FormModel {
 						"text": "Send"
 						"focusPainted": false
 						"font": #Font0
-						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "sendBtnMouseClicked", true ) )
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Compose"

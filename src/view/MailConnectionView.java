@@ -23,11 +23,6 @@ public class MailConnectionView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void sendBtnMouseClicked(MouseEvent e) {
-        // TODO add your code here
-        MailController mc=new MailController(null,null);
-        mc.test();
-    }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -127,12 +122,6 @@ public class MailConnectionView extends JFrame {
                 sendBtn.setText("Send");
                 sendBtn.setFocusPainted(false);
                 sendBtn.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
-                sendBtn.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        sendBtnMouseClicked(e);
-                    }
-                });
 
                 GroupLayout composePanelLayout = new GroupLayout(composePanel);
                 composePanel.setLayout(composePanelLayout);

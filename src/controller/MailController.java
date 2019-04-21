@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,24 +38,36 @@ public class MailController {
             if (top.contains("-ERR"))
                 break;
 
-            String to = Pattern.compile("To: .*\\n(\\s+.*\\n)+").matcher(top).group().substring(4);
-            if(to.contains("=?"))
-                to=decode(to).replaceAll("\\n\\s+","");
-            String subject = Pattern.compile("Subject: .*\\n(\\s+.*\\n)+").matcher(top).group().substring(9);
-            if(subject.contains("=?"))
-                subject=decode(subject).replaceAll("\\n\\s+","");
-            String from = Pattern.compile("From: .*\\n(\\s+.*\\n)+").matcher(top).group().substring(6);
-            if(from.contains("=?"))
-                from=decode(from).replaceAll("\\n\\s+","");
-            String sDate=Pattern.compile("Date: .*\\n").matcher(top).group().substring(6);
-
-            SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss X");
+            Matcher m=Pattern.compile("To: (.*\\r?\\n(\\s+.*\\r?\\n)*)").matcher(top);
+            String to="",subject="",from="",sDate="";
+            if(m.find()) {
+                to = m.group(1).replaceAll("\\n\\s+", "");
+                if (to.contains("=?"))
+                    to = decode(to);
+            }
+            m=Pattern.compile("Subject: (.*\\r?\\n(\\s+.*\\r?\\n)*)").matcher(top);
+            if(m.find()) {
+                subject = m.group(1).replaceAll("\\n\\s+", "");
+                if (subject.contains("=?"))
+                    subject = decode(subject);
+            }
+            m=Pattern.compile("From: (.*\\r?\\n(\\s+.*\\r?\\n)*)").matcher(top);
+            if(m.find()) {
+                from = m.group(1).replaceAll("\\n\\s+", "");
+                if (from.contains("=?"))
+                    from = decode(from);
+            }
+            m=Pattern.compile("Date: (.*)\\n").matcher(top);
+            if(m.find()) {
+                sDate = m.group(1);
+            }
             try {
-                Date date = formatter.parse(sDate);
+                Date date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(sDate);
                 MailModel mail = new MailModel(i, to, subject, from, date);
                 mailBox.add(mail);
             }
             catch (Exception e){
+                e.printStackTrace();
             }
 
         }
@@ -73,65 +86,80 @@ public class MailController {
             content = POP3Connection.writeAndReadLine("RETR " + idx);
 
 
-            if(!content.contains("Content-Type: text")){
+            String type;
+            if(content.contains("Content-Type: text"))
+                type="Content-Type: text";
+            else if(content.contains("Content-type: text"))
+                type="Content-type: text";
+            else {
                 content="不支持的邮件正文格式（非纯文本或html）";
+                mail.setContent(content);
+                return mail;
             }
-            else{
 
-                String contentInfo = content.substring(content.indexOf("Content-Type: text"), content.indexOf("\n\n",content.indexOf("Content-Type: text")));
-                if(Pattern.matches("boundary=\".*\"\\n",content)) {
-                    String boundary=Pattern.compile("boundary=\".*\"\\n").matcher(content).group().substring(10);
-                    boundary=boundary.substring(0,boundary.length()-2);
-                    content = content.substring(content.indexOf("Content-Type: text"));
-                    content = content.substring(content.indexOf("\n\n") + 2, content.indexOf(boundary)); //此时获得正文部分
+            Matcher m=Pattern.compile("boundary=\"(.*)\"\\n").matcher(content);
+            String contentInfo;
+            if(m.find()) {
+                String boundary="--"+m.group(1);
+                if(!content.contains(boundary+"\n"+type)) {
+                    content = "不支持的邮件正文格式（非纯文本或html）";
+                    mail.setContent(content);
+                    return mail;
                 }
-                else {
-                    content = content.substring(content.indexOf("Content-Type: text"));
-                    content = content.substring(content.indexOf("\n\n") + 2);
-                    content = content.substring(0,content.indexOf("\n."));//此时获得正文部分
-                }
+                contentInfo=content.substring(content.indexOf(boundary+"\n"+type), content.indexOf("\n\n",content.indexOf(boundary+"\n"+type)));
+                content = content.substring(content.indexOf(type));
+                content = content.substring(content.indexOf("\n\n") + 2, content.indexOf(boundary)); //此时获得正文部分
+            }
+            else {
+                contentInfo = content.substring(content.indexOf(type), content.indexOf("\n\n",content.indexOf(type)));
+                content = content.substring(content.indexOf(type));
+                content = content.substring(content.indexOf("\n\n") + 2);
+                content = content.substring(0,content.indexOf("\n."));//此时获得正文部分
+            }
 
-                //进行解码
-                if(contentInfo.contains("base64")){
-                    BASE64Decoder decoder = new BASE64Decoder();
+            //进行解码
+            if(contentInfo.contains("base64")){
+                BASE64Decoder decoder = new BASE64Decoder();
+                try {
+                    byte[] b = decoder.decodeBuffer(content);
+                    if(contentInfo.contains("GB")||contentInfo.contains("gb"))
+                        content = new String(b, "GBK");
+                    else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8"))
+                        content = new String(b, "UTF-8");
+                    else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1"))
+                        content=new String(b,"ISO-8859-1");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(contentInfo.contains("quoted-printable")){
+                if(contentInfo.contains("GB")||contentInfo.contains("gb")) {
                     try {
-                        byte[] b = decoder.decodeBuffer(content);
-                        if(contentInfo.contains("GB")||contentInfo.contains("gb"))
-                            content = new String(b, "GBK");
-                        else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8"))
-                            content = new String(b, "UTF-8");
-                        else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1"))
-                            content=new String(b,"ISO-8859-1");
-                    } catch (Exception e) {
+                        byte[] b = content.getBytes("GBK");
+                        content = Qdecode(b, "GBK");
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
-                else if(contentInfo.contains("quoted-printable")){
-                    if(contentInfo.contains("GB")||contentInfo.contains("gb")) {
-                        try {
-                            byte[] b = content.getBytes("GBK");
-                            content = Qdecode(b, "GBK");
-                        }
-                        catch (Exception e){
-                        }
+                else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8")){
+                    try {
+                        byte[] b = content.getBytes("UTF-8");
+                        content = Qdecode(b, "UTF-8");
                     }
-                    else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8")){
-                        try {
-                            byte[] b = content.getBytes("UTF-8");
-                            content = Qdecode(b, "UTF-8");
-                        }
-                        catch (Exception e){
-                        }
-                    }
-                    else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1")){
-                        try {
-                            byte[] b = content.getBytes("ISO-8859-1");
-                            content = Qdecode(b, "ISO-8859-1");
-                        }
-                        catch (Exception e){
-                        }
+                    catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
-
+                else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1")){
+                    try {
+                        byte[] b = content.getBytes("ISO-8859-1");
+                        content = Qdecode(b, "ISO-8859-1");
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
 
             mail.setContent(content);
@@ -187,8 +215,9 @@ public class MailController {
                 try {
                     byte[] b = decoder.decodeBuffer(decodeString);
                     decodeString = new String(b, s.substring(s.indexOf("=?")+2, s.indexOf("?B?")).toUpperCase());
-                    s.replaceFirst("=\\?.*\\?=", decodeString);
+                    s=s.replaceFirst("=\\?.*\\?=", decodeString);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             //Quoted-Printable解码
@@ -198,9 +227,10 @@ public class MailController {
                 try {
                     byte[] qp = decodeString.getBytes(s.substring(s.indexOf("=?") + 2, s.indexOf("?Q?")).toUpperCase());
                     decodeString = Qdecode(qp, s.substring(s.indexOf("=?") + 2, s.indexOf("?Q?")).toUpperCase());
-                    s.replaceFirst("=\\?.*\\?=", decodeString);
+                    s=s.replaceFirst("=\\?.*\\?=", decodeString);
                 }
                 catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }
@@ -285,116 +315,97 @@ public class MailController {
         }
     }
 
-    public void test(){
-        try {
-            File file = new File("D:\\test.txt");
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            String top = "";
-            String temp;
-            while((temp=br.readLine())!=null)
-                top+=temp+"\n";
-
-            Pattern p=Pattern.compile("To:");
-            Matcher m=p.matcher(top);
-
-
-            String to = Pattern.compile("To: .*\\n(\\s+.*\\n)*").matcher(top).group().substring(4);
-            if(to.contains("=?"))
-                to=decode(to).replaceAll("\\n\\s+","");
-            String subject = Pattern.compile("Subject: .*\\n(\\s+.*\\r\\n)*").matcher(top).group().substring(9);
-            if(subject.contains("=?"))
-                subject=decode(subject).replaceAll("\\n\\s+","");
-            String from = Pattern.compile("From: .*\\n(\\s+.*\\n)*").matcher(top).group().substring(6);
-            if(from.contains("=?"))
-                from=decode(from).replaceAll("\\n\\s+","");
-            String sDate=Pattern.compile("Date: .*\\n").matcher(top).group().substring(6);
-
-            SimpleDateFormat formatter = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss X");
-            try {
-                Date date = formatter.parse(sDate);
-                System.out.println(to);
-                System.out.println(subject);
-                System.out.println(from);
-                System.out.println(date.toString());
-                System.out.println("-----------------");
-            }
-            catch (Exception e){
-            }
-
-
-            String content=top;
-
-            if(!content.contains("Content-Type: text")){
-                content="不支持的邮件正文格式（非纯文本或html）";
-            }
-            else{
-
-                String contentInfo = content.substring(content.indexOf("Content-Type: text"), content.indexOf("\n\n",content.indexOf("Content-Type: text")));
-                if(Pattern.matches("boundary=\".*\"\\n",content)) {
-                    String boundary=Pattern.compile("boundary=\".*\"\\n").matcher(content).group().substring(10);
-                    boundary=boundary.substring(0,boundary.length()-2);
-                    content = content.substring(content.indexOf("Content-Type: text"));
-                    content = content.substring(content.indexOf("\n\n") + 2, content.indexOf(boundary)); //此时获得正文部分
-                }
-                else {
-                    content = content.substring(content.indexOf("Content-Type: text"));
-                    content = content.substring(content.indexOf("\n\n") + 2);
-                    content = content.substring(0,content.indexOf("\n."));//此时获得正文部分
-                }
-
-                //进行解码
-                if(contentInfo.contains("base64")){
-                    BASE64Decoder decoder = new BASE64Decoder();
-                    try {
-                        byte[] b = decoder.decodeBuffer(content);
-                        if(contentInfo.contains("GB")||contentInfo.contains("gb"))
-                            content = new String(b, "GBK");
-                        else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8"))
-                            content = new String(b, "UTF-8");
-                        else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1"))
-                            content=new String(b,"ISO-8859-1");
-                    } catch (Exception e) {
-                    }
-                }
-                else if(contentInfo.contains("quoted-printable")){
-                    if(contentInfo.contains("GB")||contentInfo.contains("gb")) {
-                        try {
-                            byte[] b = content.getBytes("GBK");
-                            content = Qdecode(b, "GBK");
-                        }
-                        catch (Exception e){
-                        }
-                    }
-                    else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8")){
-                        try {
-                            byte[] b = content.getBytes("UTF-8");
-                            content = Qdecode(b, "UTF-8");
-                        }
-                        catch (Exception e){
-                        }
-                    }
-                    else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1")){
-                        try {
-                            byte[] b = content.getBytes("ISO-8859-1");
-                            content = Qdecode(b, "ISO-8859-1");
-                        }
-                        catch (Exception e){
-                        }
-                    }
-                }
-
-            }
-            System.out.println(content);
-            System.out.println("-----------------");
-
-
-        } catch (Exception e) {
-            System.out.println("error");
-        }
-    }
-
-
+//    public void test(){
+//        try {
+//            File file = new File("D:\\test.txt");
+//            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+//            BufferedReader br = new BufferedReader(isr);
+//            String top = "";
+//            String temp;
+//            while((temp=br.readLine())!=null)
+//                top+=temp+"\n";
+//
+//            String content=top;
+//
+//            String type;
+//            if(content.contains("Content-Type: text"))
+//                type="Content-Type: text";
+//            else if(content.contains("Content-type: text"))
+//                type="Content-type: text";
+//            else {
+//                content="不支持的邮件正文格式（非纯文本或html）";
+//                return;
+//            }
+//
+//                Matcher m=Pattern.compile("boundary=\"(.*)\"\\n").matcher(content);
+//                String contentInfo;
+//                if(m.find()) {
+//                    String boundary="--"+m.group(1);
+//                    if(!content.contains(boundary+"\n"+type)) {
+//                        content = "不支持的邮件正文格式（非纯文本或html）";
+//                        return;
+//                    }
+//                    contentInfo=content.substring(content.indexOf(boundary+"\n"+type), content.indexOf("\n\n",content.indexOf(boundary+"\n"+type)));
+//                    content = content.substring(content.indexOf(type));
+//                    content = content.substring(content.indexOf("\n\n") + 2, content.indexOf(boundary)); //此时获得正文部分
+//                }
+//                else {
+//                    contentInfo = content.substring(content.indexOf(type), content.indexOf("\n\n",content.indexOf(type)));
+//                    content = content.substring(content.indexOf(type));
+//                    content = content.substring(content.indexOf("\n\n") + 2);
+//                    content = content.substring(0,content.indexOf("\n."));//此时获得正文部分
+//                }
+//
+//                //进行解码
+//                if(contentInfo.contains("base64")){
+//                    BASE64Decoder decoder = new BASE64Decoder();
+//                    try {
+//                        byte[] b = decoder.decodeBuffer(content);
+//                        if(contentInfo.contains("GB")||contentInfo.contains("gb"))
+//                            content = new String(b, "GBK");
+//                        else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8"))
+//                            content = new String(b, "UTF-8");
+//                        else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1"))
+//                            content=new String(b,"ISO-8859-1");
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                else if(contentInfo.contains("quoted-printable")){
+//                    if(contentInfo.contains("GB")||contentInfo.contains("gb")) {
+//                        try {
+//                            byte[] b = content.getBytes("GBK");
+//                            content = Qdecode(b, "GBK");
+//                        }
+//                        catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    else if(contentInfo.contains("utf-8")||contentInfo.contains("UTF-8")){
+//                        try {
+//                            byte[] b = content.getBytes("UTF-8");
+//                            content = Qdecode(b, "UTF-8");
+//                        }
+//                        catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    else if(contentInfo.contains("ISO-8859-1")||contentInfo.contains("iso-8859-1")){
+//                        try {
+//                            byte[] b = content.getBytes("ISO-8859-1");
+//                            content = Qdecode(b, "ISO-8859-1");
+//                        }
+//                        catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//                System.out.println(content);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 }
