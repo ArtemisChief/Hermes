@@ -4,7 +4,10 @@
 
 package view;
 
+import controller.MailController;
+
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -18,6 +21,12 @@ public class MailConnectionView extends JFrame {
     public MailConnectionView() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    private void sendBtnMouseClicked(MouseEvent e) {
+        // TODO add your code here
+        MailController mc=new MailController(null,null);
+        mc.test();
     }
 
     private void initComponents() {
@@ -118,6 +127,12 @@ public class MailConnectionView extends JFrame {
                 sendBtn.setText("Send");
                 sendBtn.setFocusPainted(false);
                 sendBtn.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+                sendBtn.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        sendBtnMouseClicked(e);
+                    }
+                });
 
                 GroupLayout composePanelLayout = new GroupLayout(composePanel);
                 composePanel.setLayout(composePanelLayout);
