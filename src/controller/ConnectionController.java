@@ -46,6 +46,9 @@ public class ConnectionController {
             sslSocket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(connection.getHost(), connection.getPort());
             sslSocket.startHandshake();
 
+            BufferedReader reader=new BufferedReader(new InputStreamReader(sslSocket.getInputStream()));
+            reader.readLine();
+
             connection.setSSLSocket(sslSocket);
         } catch (Exception e) {
             e.printStackTrace();
