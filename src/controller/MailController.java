@@ -32,7 +32,7 @@ public class MailController {
         POP3Connection.writeAndReadLine("pass " + POP3Connection.getPassword());
 
 
-        for (int i = 1;i<20 ; i++) {
+        for (int i = 1;i<3 ; i++) {
             String top = POP3Connection.writeAndReadHead("top " + i + " 0");
             if (top.contains("-ERR"))
                 break;
@@ -81,13 +81,20 @@ public class MailController {
     public MailModel readMail(int idx) {
         String content;
 
-        MailModel mail = mailBox.get(idx);
+        MailModel mail=null;
+        for(MailModel m:mailBox){
+            if(m.getIdx()==idx)
+                mail=m;
+        }
 
-        if (mail.getContent() == null) {
-            POP3Connection.write("user" + POP3Connection.getUsername());
-            POP3Connection.write("pass" + POP3Connection.getPassword());
+        if(mail==null)
+            return mail;
 
-            content = POP3Connection.writeAndReadLine("RETR " + idx);
+        if (mail.getContent().equals("")) {
+            POP3Connection.writeAndReadLine("user " + POP3Connection.getUsername());
+            POP3Connection.writeAndReadLine("pass " + POP3Connection.getPassword());
+
+            content = POP3Connection.writeAndReadContent("RETR " + idx);
 
             // 正文类型
             String type;

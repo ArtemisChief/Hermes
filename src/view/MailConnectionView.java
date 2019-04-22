@@ -4,6 +4,7 @@
 
 package view;
 
+import java.awt.event.*;
 import controller.ConnectionController;
 import controller.MailController;
 import model.MailModel;
@@ -36,6 +37,7 @@ public class MailConnectionView extends JFrame {
         mailController.receiveAllMail();
         ArrayList<MailModel> mailBox=mailController.getMailBox();
         Vector name = new Vector();
+        name.add("MailIndex");
         name.add("From");
         name.add("Subject");
         name.add("Time");
@@ -43,14 +45,38 @@ public class MailConnectionView extends JFrame {
         for(int i=0;i<mailBox.size();i++){
             data.add(mailBox.get(i).getHeadInfo());
         }
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel(){
+            public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        };
         model.setDataVector(data,name);
         mailTable.setModel(model);
+
     }
 
     private void sendBtnActionPerformed(ActionEvent e) {
         connectionController.checkConnection(connectionController.getSMTPConnection());
         mailController.sendMail(toTxtField.getText(),subjectTxtField.getText(),fromTxtField.getText(),contentTxtArea.getText());
+    }
+
+    private void mailTableMouseClicked(MouseEvent e) {
+
+        connectionController.checkConnection(connectionController.getPOP3Connection());
+        MailModel mail=mailController.readMail(Integer.parseInt(mailTable.getValueAt(mailTable.getSelectedRow(),0).toString()));
+        String content;
+        if(mail==null)
+            content="读取邮件时出现错误！";
+        else
+            content="Subject: "+mail.getSubject()+"From: "+mail.getFrom()+"To: "+mail.getTo()+"Date: "+mail.getDate()+mail.getContent();
+        JFrame jf = new JFrame();
+        jf.setSize(400, 300);
+        JTextField jTextField=new JTextField(content);
+        jf.add(jTextField);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setVisible(true);
+
     }
 
     private void initComponents() {
@@ -252,11 +278,17 @@ public class MailConnectionView extends JFrame {
                         cm.getColumn(2).setResizable(false);
                         cm.getColumn(2).setPreferredWidth(137);
                     }
-                    mailTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    mailTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
                     mailTable.setAutoCreateRowSorter(true);
                     mailTable.setFocusable(false);
                     mailTable.setFillsViewportHeight(true);
                     mailTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                    mailTable.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            mailTableMouseClicked(e);
+                        }
+                    });
                     mailScrollPane.setViewportView(mailTable);
                 }
 

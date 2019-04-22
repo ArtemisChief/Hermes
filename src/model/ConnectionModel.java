@@ -89,8 +89,28 @@ public class ConnectionModel {
 
         try {
             String line;
-            while((line=reader.readLine())!=null&&!line.equals(".")) {
+            while((line=reader.readLine())!=null&&!line.equals("."))
                 stringBuilder.append(line).append("\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public String writeAndReadContent(String str){
+        writer.println(str);
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            String line;
+            boolean emptyline=false;
+            while((line=reader.readLine())!=null) {
+                stringBuilder.append(line).append("\n");
+                if(emptyline&&line.equals("."))
+                    break;
+                emptyline=line.equals("");
             }
         } catch (Exception e) {
             e.printStackTrace();

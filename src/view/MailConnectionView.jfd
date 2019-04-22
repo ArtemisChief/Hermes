@@ -129,11 +129,12 @@ new FormModel {
 								add( new com.jformdesigner.model.SwingTableColumn( null, 650, 0, 0, false ) )
 								add( new com.jformdesigner.model.SwingTableColumn( null, 137, 0, 0, false ) )
 							} )
-							"selectionMode": 0
+							"selectionMode": 1
 							"autoCreateRowSorter": true
 							"focusable": false
 							"fillsViewportHeight": true
 							"autoResizeMode": 0
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "mailTableMouseClicked", true ) )
 						} )
 					} )
 				}, new FormLayoutConstraints( null ) {

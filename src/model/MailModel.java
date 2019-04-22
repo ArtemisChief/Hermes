@@ -2,6 +2,7 @@ package model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Vector;
 
 public class MailModel {
@@ -56,9 +57,10 @@ public class MailModel {
 
     public Vector getHeadInfo(){
         Vector v=new Vector();
+        v.add(idx);
         v.add(from);
         v.add(subject);
-        v.add(new SimpleDateFormat("yyyy-MMM-d HH:mm:ss Z").format(date));
+        v.add(new SimpleDateFormat("yyyy-MMM-d HH:mm:ss Z", Locale.ENGLISH).format(date));
         return v;
     }
 
