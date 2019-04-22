@@ -3,6 +3,7 @@ package controller;
 import model.ConnectionModel;
 import model.MailModel;
 import util.Decode;
+import util.Encode;
 
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -143,15 +144,23 @@ public class MailController {
             e.printStackTrace();
         }
 
-        SMTPConnection.write("MAIL FROM:<" + mail.getFrom() + ">");
-        SMTPConnection.write("RCPT TO:<" + mail.getTo() + ">");
+        String from = mail.getFrom(), to = mail.getTo(), subject = mail.getSubject(), content = mail.getSubject();
 
+        SMTPConnection.write("MAIL FROM:<" + from + ">");
+        SMTPConnection.write("RCPT TO:<" + to + ">");
         SMTPConnection.write("DATA");
-        SMTPConnection.write("FROM:" + mail.getFrom());
-        SMTPConnection.write("TO:" + mail.getTo());
-        SMTPConnection.write("SUBJECT:" + mail.getSubject());
+
+        SMTPConnection.write("From: \"" + Encode.BUEncode(from) + "\" <" + from + ">");
+        SMTPConnection.write("To: \"" + Encode.BUEncode(to) + "\" <" + to + ">");
+        SMTPConnection.write("Subject: " + Encode.BUEncode(subject));
+        SMTPConnection.write("Mime-Version: 1.0");
+        SMTPConnection.write("Content-Type: text/plain");
+        SMTPConnection.write(" charset=\"utf-8\"");
+        SMTPConnection.write("Content-Transfer-Encoding: base64");
+        SMTPConnection.write("Date: " + new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(new Date()));
         SMTPConnection.write("");
-        SMTPConnection.write(mail.getContent());
+        SMTPConnection.write(Encode.BUEncode(content));
+        SMTPConnection.write("");
         SMTPConnection.write(".");
 
         SMTPConnection.close();
