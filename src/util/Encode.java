@@ -12,4 +12,8 @@ public class Encode {
         return stringBuilder.toString();
     }
 
+    public static String BEncode(String str) {
+        return new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8)));
+    }
+
 }

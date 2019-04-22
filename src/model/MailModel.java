@@ -11,12 +11,21 @@ public class MailModel {
     private Date date;
 
     public MailModel(int idx, String to, String subject, String from, Date date) {
-        this.idx=idx;
+        this.idx = idx;
         this.to = to;
         this.subject = subject;
-        this.content = content;
         this.from = from;
-        this.date=date;
+        this.date = date;
+        this.content = "";
+    }
+
+    public MailModel(int idx, String to, String subject, String from, String content) {
+        this.idx = idx;
+        this.to = to;
+        this.subject = subject;
+        this.from = from;
+        this.content = content;
+        this.date = new Date();
     }
 
     public int getIdx() {

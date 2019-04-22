@@ -4,11 +4,15 @@
 
 package view;
 
+import controller.ConnectionController;
+import controller.MailController;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.Date;
 
 /**
@@ -16,9 +20,20 @@ import java.util.Date;
  */
 public class MailConnectionView extends JFrame {
 
+    private ConnectionController connectionController;
+    private MailController mailController;
+
     public MailConnectionView() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        connectionController = new ConnectionController("pop.qq.com",995,"smtp.qq.com",587,"","");
+        mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
+    }
+
+    private void sendBtnActionPerformed(ActionEvent e) {
+        connectionController.checkConnection(connectionController.getSMTPConnection());
+        mailController.sendMail(toTxtField.getText(),subjectTxtField.getText(),fromTxtField.getText(),contentTxtArea.getText());
     }
 
     private void initComponents() {
@@ -54,6 +69,7 @@ public class MailConnectionView extends JFrame {
 
         //======== this ========
         setResizable(false);
+        setTitle("Hermes - Simple Java mail client");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout());
 
@@ -119,6 +135,7 @@ public class MailConnectionView extends JFrame {
                 sendBtn.setText("Send");
                 sendBtn.setFocusPainted(false);
                 sendBtn.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+                sendBtn.addActionListener(e -> sendBtnActionPerformed(e));
 
                 GroupLayout composePanelLayout = new GroupLayout(composePanel);
                 composePanel.setLayout(composePanelLayout);

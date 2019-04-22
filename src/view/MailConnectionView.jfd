@@ -7,6 +7,7 @@ new FormModel {
 			name: "this"
 			"resizable": false
 			"$sizePolicy": 1
+			"title": "Hermes - Simple Java mail client"
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "tabbedPane2"
 				"focusable": false
@@ -77,6 +78,7 @@ new FormModel {
 						"text": "Send"
 						"focusPainted": false
 						"font": #Font0
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "sendBtnActionPerformed", true ) )
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Compose"

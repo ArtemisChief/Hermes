@@ -3,14 +3,19 @@ package controller;
 import model.ConnectionModel;
 
 import javax.net.ssl.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.SecureRandom;
 
 public class ConnectionController {
 
-    SSLContext sslContext;
-    TrustManager[] trustManagers = {new X509TrustManager() {
+    private ConnectionModel POP3Connection;
+    private ConnectionModel SMTPConnection;
+
+    private SSLContext sslContext;
+    private TrustManager[] trustManagers = {new X509TrustManager() {
         public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
         }
 
@@ -22,16 +27,19 @@ public class ConnectionController {
         }
     }};
 
-    public ConnectionController() {
+    public ConnectionController(String POP3, int POP3Port,String SMTP, int SMTPPort, String username, String password) {
         try {
             sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustManagers, new SecureRandom());
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        POP3Connection = new ConnectionModel(0, POP3, POP3Port, username, password);
+        SMTPConnection = new ConnectionModel(1, SMTP, SMTPPort, username, password);
     }
 
-    public SSLSocket initConnectionWithSSL(ConnectionModel connection) {
+    private void initConnectionWithSSL(ConnectionModel connection) {
         SSLSocket sslSocket;
 
         try {
@@ -41,40 +49,46 @@ public class ConnectionController {
             connection.setSSLSocket(sslSocket);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
-
-        return sslSocket;
     }
 
-    public SSLSocket initConnectionWithTSL(ConnectionModel connection) {
+    private void initConnectionWithTSL(ConnectionModel connection) {
         SSLSocket sslSocket;
 
         try {
             Socket socket = new Socket(connection.getHost(), connection.getPort());
+            BufferedReader reader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
+            reader.readLine();
             writer.println("STARTTLS");
-            sslSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(socket, "smtp.qq.com", 587, true);
+            reader.readLine();
+
+            sslSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(socket, connection.getHost(), connection.getPort(), true);
             sslSocket.startHandshake();
 
             connection.setSSLSocket(sslSocket);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
-
-        return sslSocket;
     }
 
     public void checkConnection(ConnectionModel connection) {
         SSLSocket sslSocket = connection.getSSLSocket();
-        if (!sslSocket.isConnected()) {
+        if (sslSocket==null || !sslSocket.isConnected()) {
             if (connection.getType() == 0)
                 initConnectionWithSSL(connection);
             else
                 initConnectionWithTSL(connection);
         }
+    }
+
+    public ConnectionModel getPOP3Connection() {
+        return POP3Connection;
+    }
+
+    public ConnectionModel getSMTPConnection() {
+        return SMTPConnection;
     }
 
 }

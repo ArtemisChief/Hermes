@@ -1,13 +1,15 @@
 package model;
 
-import java.io.*;
 import javax.net.ssl.SSLSocket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 public class ConnectionModel {
 
     // 0: SSL
     // 1: TSL
-    private byte type;
+    private int type;
 
     private String host;
     private int port;
@@ -19,7 +21,7 @@ public class ConnectionModel {
     private BufferedReader reader;
     private PrintWriter writer;
 
-    public ConnectionModel(byte type, String host, int port, String username, String password) {
+    public ConnectionModel(int type, String host, int port, String username, String password) {
         this.type = type;
         this.host = host;
         this.port = port;
@@ -27,7 +29,7 @@ public class ConnectionModel {
         this.password = password;
     }
 
-    public byte getType() {
+    public int getType() {
         return type;
     }
 
@@ -55,19 +57,19 @@ public class ConnectionModel {
         this.sslSocket = sslSocket;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream()));
-            writer = new PrintWriter(sslSocket.getOutputStream(), true);
+            reader = new BufferedReader(new InputStreamReader(this.sslSocket.getInputStream()));
+            writer = new PrintWriter(this.sslSocket.getOutputStream(), true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void write(String str) {
-        writer.write(str);
+        writer.println(str);
     }
 
     public String writeAndReadLine(String str) {
-        writer.write(str);
+        writer.println(str);
 
         String line = "";
 
@@ -78,6 +80,22 @@ public class ConnectionModel {
         }
 
         return line;
+    }
+
+    public String writeAndReadAll(String str){
+        writer.println(str);
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            String line;
+            while((line=reader.readLine())!=null)
+                stringBuilder.append(line).append("\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return stringBuilder.toString();
     }
 
     public void close() {

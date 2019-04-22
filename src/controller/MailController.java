@@ -32,7 +32,7 @@ public class MailController {
         POP3Connection.write("pass" + POP3Connection.getPassword());
 
         for (int i = 0; ; i++) {
-            String top = POP3Connection.writeAndReadLine("top " + i + " 0");
+            String top = POP3Connection.writeAndReadAll("top " + i + " 0");
             if (top.contains("-ERR"))
                 break;
 
@@ -86,7 +86,7 @@ public class MailController {
             POP3Connection.write("user" + POP3Connection.getUsername());
             POP3Connection.write("pass" + POP3Connection.getPassword());
 
-            content = POP3Connection.writeAndReadLine("RETR " + idx);
+            content = POP3Connection.writeAndReadAll("RETR " + idx);
 
             // 正文类型
             String type;
@@ -133,37 +133,42 @@ public class MailController {
         return mail;
     }
 
-    public void sendMail(MailModel mail) {
-        SMTPConnection.write("HELO " + SMTPConnection.getUsername());
+    private void sendMail(MailModel mail) {
+        SMTPConnection.writeAndReadLine("HELO " + SMTPConnection.getUsername());
 
-        SMTPConnection.write("auth login");
+        SMTPConnection.writeAndReadLine("auth login");
         try {
-            SMTPConnection.write(Base64.getEncoder().encodeToString(SMTPConnection.getUsername().getBytes(StandardCharsets.UTF_8)));
-            SMTPConnection.write(Base64.getEncoder().encodeToString(SMTPConnection.getPassword().getBytes(StandardCharsets.UTF_8)));
+            SMTPConnection.writeAndReadLine(Base64.getEncoder().encodeToString(SMTPConnection.getUsername().getBytes(StandardCharsets.UTF_8)));
+            SMTPConnection.writeAndReadLine(Base64.getEncoder().encodeToString(SMTPConnection.getPassword().getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        String from = mail.getFrom(), to = mail.getTo(), subject = mail.getSubject(), content = mail.getSubject();
+        String from = mail.getFrom(), to = mail.getTo(), subject = mail.getSubject(), content = mail.getContent();
+        String date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(mail.getDate());
 
-        SMTPConnection.write("MAIL FROM:<" + from + ">");
-        SMTPConnection.write("RCPT TO:<" + to + ">");
-        SMTPConnection.write("DATA");
+        SMTPConnection.writeAndReadLine("MAIL FROM:<" + from + ">");
+        SMTPConnection.writeAndReadLine("RCPT TO:<" + to + ">");
+        SMTPConnection.writeAndReadLine("DATA");
 
         SMTPConnection.write("From: \"" + Encode.BUEncode(from) + "\" <" + from + ">");
         SMTPConnection.write("To: \"" + Encode.BUEncode(to) + "\" <" + to + ">");
         SMTPConnection.write("Subject: " + Encode.BUEncode(subject));
         SMTPConnection.write("Mime-Version: 1.0");
-        SMTPConnection.write("Content-Type: text/plain");
+        SMTPConnection.write("Content-Type: text/plain;");
         SMTPConnection.write(" charset=\"utf-8\"");
         SMTPConnection.write("Content-Transfer-Encoding: base64");
-        SMTPConnection.write("Date: " + new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).format(new Date()));
+        SMTPConnection.write("Date: " + date);
         SMTPConnection.write("");
-        SMTPConnection.write(Encode.BUEncode(content));
+        SMTPConnection.write(Encode.BEncode(content));
         SMTPConnection.write("");
-        SMTPConnection.write(".");
+        SMTPConnection.writeAndReadLine(".");
 
         SMTPConnection.close();
+    }
+
+    public void sendMail(String to,String subject,String from,String content) {
+        sendMail(new MailModel(mailBox.size() + 1, to, subject, from, content));
     }
 
     public void deleteMail(int idx) {
