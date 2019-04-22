@@ -6,6 +6,7 @@ package view;
 
 import controller.ConnectionController;
 import controller.MailController;
+import model.MailModel;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -13,7 +14,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 /**
  * @author Chief
@@ -27,8 +30,22 @@ public class MailConnectionView extends JFrame {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        connectionController = new ConnectionController("pop.qq.com",995,"smtp.qq.com",587,"","");
+        connectionController = new ConnectionController("pop.qq.com",995,"smtp.qq.com",587,"511821163@qq.com","");
+        connectionController.checkConnection(connectionController.getPOP3Connection());
         mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
+        mailController.receiveAllMail();
+        ArrayList<MailModel> mailBox=mailController.getMailBox();
+        Vector name = new Vector();
+        name.add("From");
+        name.add("Subject");
+        name.add("Time");
+        Vector data=new Vector();
+        for(int i=0;i<mailBox.size();i++){
+            data.add(mailBox.get(i).getHeadInfo());
+        }
+        DefaultTableModel model = new DefaultTableModel();
+        model.setDataVector(data,name);
+        mailTable.setModel(model);
     }
 
     private void sendBtnActionPerformed(ActionEvent e) {

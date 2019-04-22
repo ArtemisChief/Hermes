@@ -28,11 +28,12 @@ public class MailController {
     }
 
     public void receiveAllMail() {
-        POP3Connection.write("user" + POP3Connection.getUsername());
-        POP3Connection.write("pass" + POP3Connection.getPassword());
+        POP3Connection.writeAndReadLine("user " + POP3Connection.getUsername());
+        POP3Connection.writeAndReadLine("pass " + POP3Connection.getPassword());
 
-        for (int i = 0; ; i++) {
-            String top = POP3Connection.writeAndReadAll("top " + i + " 0");
+
+        for (int i = 1;i<20 ; i++) {
+            String top = POP3Connection.writeAndReadHead("top " + i + " 0");
             if (top.contains("-ERR"))
                 break;
 
@@ -86,7 +87,7 @@ public class MailController {
             POP3Connection.write("user" + POP3Connection.getUsername());
             POP3Connection.write("pass" + POP3Connection.getPassword());
 
-            content = POP3Connection.writeAndReadAll("RETR " + idx);
+            content = POP3Connection.writeAndReadLine("RETR " + idx);
 
             // 正文类型
             String type;

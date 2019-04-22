@@ -82,15 +82,16 @@ public class ConnectionModel {
         return line;
     }
 
-    public String writeAndReadAll(String str){
+    public String writeAndReadHead(String str){
         writer.println(str);
 
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
             String line;
-            while((line=reader.readLine())!=null)
+            while((line=reader.readLine())!=null&&!line.equals(".")) {
                 stringBuilder.append(line).append("\n");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,8 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 public class MailModel {
     private int idx;
@@ -50,6 +52,14 @@ public class MailModel {
 
     public Date getDate() {
         return date;
+    }
+
+    public Vector getHeadInfo(){
+        Vector v=new Vector();
+        v.add(from);
+        v.add(subject);
+        v.add(new SimpleDateFormat("yyyy-MMM-d HH:mm:ss Z").format(date));
+        return v;
     }
 
     public void setContent(String content) {
