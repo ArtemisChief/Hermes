@@ -69,12 +69,15 @@ public class MailConnectionView extends JFrame {
         if(mail==null)
             content="读取邮件时出现错误！";
         else
-            content="Subject: "+mail.getSubject()+"From: "+mail.getFrom()+"To: "+mail.getTo()+"Date: "+mail.getDate()+mail.getContent();
+            content="Subject: "+mail.getSubject()+"\n"+
+                    "From: "+mail.getFrom()+"\n"+
+                    "To: "+mail.getTo()+"\n"+
+                    "Date: "+mail.getDate()+"\n"+
+                    mail.getContent();
         JFrame jf = new JFrame();
-        jf.setSize(400, 300);
-        JTextField jTextField=new JTextField(content);
-        jf.add(jTextField);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setSize(800, 600);
+        JTextArea  jTextArea =new JTextArea(content);
+        jf.add(jTextArea);
         jf.setVisible(true);
 
     }
@@ -247,18 +250,18 @@ public class MailConnectionView extends JFrame {
                     mailTable.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
                     mailTable.setModel(new DefaultTableModel(
                         new Object[][] {
-                            {"aa", "cc", null},
-                            {"bb", "dd", null},
+                            {null, "aa", "cc", null},
+                            {null, "bb", "dd", null},
                         },
                         new String[] {
-                            "From", "Subject", "time"
+                            "MailIndex", "From", "Subject", "Time"
                         }
                     ) {
                         Class<?>[] columnTypes = new Class<?>[] {
-                            String.class, String.class, Date.class
+                            Object.class, String.class, String.class, Date.class
                         };
                         boolean[] columnEditable = new boolean[] {
-                            false, false, false
+                            true, false, false, false
                         };
                         @Override
                         public Class<?> getColumnClass(int columnIndex) {
@@ -271,12 +274,12 @@ public class MailConnectionView extends JFrame {
                     });
                     {
                         TableColumnModel cm = mailTable.getColumnModel();
-                        cm.getColumn(0).setResizable(false);
-                        cm.getColumn(0).setPreferredWidth(200);
                         cm.getColumn(1).setResizable(false);
-                        cm.getColumn(1).setPreferredWidth(650);
+                        cm.getColumn(1).setPreferredWidth(200);
                         cm.getColumn(2).setResizable(false);
-                        cm.getColumn(2).setPreferredWidth(137);
+                        cm.getColumn(2).setPreferredWidth(650);
+                        cm.getColumn(3).setResizable(false);
+                        cm.getColumn(3).setPreferredWidth(137);
                     }
                     mailTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
                     mailTable.setAutoCreateRowSorter(true);

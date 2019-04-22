@@ -103,28 +103,34 @@ new FormModel {
 							"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
 							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
 								add( new java.util.Vector {
+									add( null )
 									add( "aa" )
 									add( "cc" )
 									add( null )
 								} )
 								add( new java.util.Vector {
+									add( null )
 									add( "bb" )
 									add( "dd" )
 									add( null )
 								} )
 							}, new java.util.Vector {
+								add( "MailIndex" )
 								add( "From" )
 								add( "Subject" )
-								add( "time" )
+								add( "Time" )
 							}, new java.util.Vector {
+								add( null )
 								add( class java.lang.String )
 								add( class java.lang.String )
 								add( class java.util.Date )
 							}, new java.util.Vector {
+								add( null )
 								add( false )
 								add( false )
 								add( false )
 							}, new java.util.Vector {
+								add( null )
 								add( new com.jformdesigner.model.SwingTableColumn( null, 200, 0, 0, false ) )
 								add( new com.jformdesigner.model.SwingTableColumn( null, 650, 0, 0, false ) )
 								add( new com.jformdesigner.model.SwingTableColumn( null, 137, 0, 0, false ) )

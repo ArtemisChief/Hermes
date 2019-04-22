@@ -32,7 +32,7 @@ public class MailController {
         POP3Connection.writeAndReadLine("pass " + POP3Connection.getPassword());
 
 
-        for (int i = 1;i<3 ; i++) {
+        for (int i = 1;i<11 ; i++) {
             String top = POP3Connection.writeAndReadHead("top " + i + " 0");
             if (top.contains("-ERR"))
                 break;
