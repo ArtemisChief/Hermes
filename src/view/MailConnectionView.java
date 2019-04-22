@@ -4,86 +4,38 @@
 
 package view;
 
-import java.awt.event.*;
-import controller.ConnectionController;
-import controller.MailController;
-import model.MailModel;
-
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
-import java.util.Vector;
 
 /**
  * @author Chief
  */
 public class MailConnectionView extends JFrame {
 
-    private ConnectionController connectionController;
-    private MailController mailController;
-
     public MailConnectionView() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        connectionController = new ConnectionController("pop.qq.com",995,"smtp.qq.com",587,"511821163@qq.com","");
-        connectionController.checkConnection(connectionController.getPOP3Connection());
-        mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
-        mailController.receiveAllMail();
-        ArrayList<MailModel> mailBox=mailController.getMailBox();
-        Vector name = new Vector();
-        name.add("MailIndex");
-        name.add("From");
-        name.add("Subject");
-        name.add("Time");
-        Vector data=new Vector();
-        for(int i=0;i<mailBox.size();i++){
-            data.add(mailBox.get(i).getHeadInfo());
-        }
-        DefaultTableModel model = new DefaultTableModel(){
-            public boolean isCellEditable(int row, int column)
-            {
-                return false;
-            }
-        };
-        model.setDataVector(data,name);
-        mailTable.setModel(model);
-
     }
 
     private void sendBtnActionPerformed(ActionEvent e) {
-        connectionController.checkConnection(connectionController.getSMTPConnection());
-        mailController.sendMail(toTxtField.getText(),subjectTxtField.getText(),fromTxtField.getText(),contentTxtArea.getText());
+        // TODO add your code here
     }
 
     private void mailTableMouseClicked(MouseEvent e) {
-
-        connectionController.checkConnection(connectionController.getPOP3Connection());
-        MailModel mail=mailController.readMail(Integer.parseInt(mailTable.getValueAt(mailTable.getSelectedRow(),0).toString()));
-        String content;
-        if(mail==null)
-            content="读取邮件时出现错误！";
-        else
-            content="Subject: "+mail.getSubject()+"\n"+
-                    "From: "+mail.getFrom()+"\n"+
-                    "To: "+mail.getTo()+"\n"+
-                    "Date: "+mail.getDate()+"\n"+
-                    mail.getContent();
-        JFrame jf = new JFrame();
-        jf.setSize(800, 600);
-        JTextArea  jTextArea =new JTextArea(content);
-        jf.add(jTextArea);
-        jf.setVisible(true);
-
+        // TODO add your code here
     }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner Evaluation license - alex
         tabbedPane2 = new JTabbedPane();
         composePanel = new JPanel();
         toTxtField = new JTextField();
@@ -130,6 +82,14 @@ public class MailConnectionView extends JFrame {
             {
                 composePanel.setAlignmentY(0.0F);
                 composePanel.setAlignmentX(0.0F);
+
+                // JFormDesigner evaluation mark
+                composePanel.setBorder(new javax.swing.border.CompoundBorder(
+                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                        "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                        javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                        java.awt.Color.red), composePanel.getBorder())); composePanel.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+
 
                 //---- toTxtField ----
                 toTxtField.setBorder(new EtchedBorder());
@@ -440,6 +400,7 @@ public class MailConnectionView extends JFrame {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - alex
     private JTabbedPane tabbedPane2;
     private JPanel composePanel;
     private JTextField toTxtField;

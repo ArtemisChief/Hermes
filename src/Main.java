@@ -1,5 +1,6 @@
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
-import view.MailConnectionView;
+import view.MailContentView;
+
 import javax.swing.*;
 
 public class Main {
@@ -15,8 +16,11 @@ public class Main {
             e.printStackTrace();
         }
 
-        MailConnectionView mailConnectionView = new MailConnectionView();
-        mailConnectionView.setVisible(true);
+//        MailConnectionView mailConnectionView = new MailConnectionView();
+//        mailConnectionView.setVisible(true);
+
+        MailContentView mailContentView =new MailContentView();
+        mailContentView.setVisible(true);
     }
 
 }
