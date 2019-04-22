@@ -78,7 +78,7 @@ public class ConnectionController {
 
     public void checkConnection(ConnectionModel connection) {
         SSLSocket sslSocket = connection.getSSLSocket();
-        if (sslSocket==null || !sslSocket.isConnected()) {
+        if (sslSocket==null || sslSocket.isClosed()) {
             if (connection.getType() == 0)
                 initConnectionWithSSL(connection);
             else
