@@ -179,8 +179,8 @@ public class MailConnectionView extends JFrame {
                             .addGroup(composePanelLayout.createParallelGroup()
                                 .addGroup(composePanelLayout.createSequentialGroup()
                                     .addComponent(label3)
-                                    .addGap(0, 347, Short.MAX_VALUE))
-                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
+                                    .addGap(0, 338, Short.MAX_VALUE))
+                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label4)
@@ -388,7 +388,7 @@ public class MailConnectionView extends JFrame {
                                 .addComponent(label8)
                                 .addComponent(pwdTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(mailTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(406, Short.MAX_VALUE))
+                            .addContainerGap(403, Short.MAX_VALUE))
                 );
             }
             tabbedPane2.addTab("Setting", settingPanel);

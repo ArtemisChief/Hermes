@@ -9,16 +9,21 @@ import model.MailModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author alex
  */
 public class MailContentView extends JFrame {
+
     public MailContentView() {
         initComponents();
+
     }
 
     public MailContentView(MailModel mail) {
+
         initComponents();
         lblSubject.setText(mail.getSubject());
         lblFrom.setText(mail.getFrom());
@@ -27,6 +32,12 @@ public class MailContentView extends JFrame {
 
 
     }
+
+    private void btnCloseMouseClicked(MouseEvent e) {
+        //this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        this.dispose();
+    }
+
 
 
 
@@ -45,7 +56,6 @@ public class MailContentView extends JFrame {
         scrollPane1 = new JScrollPane();
         txtAreaContent = new JTextArea();
         buttonBar = new JPanel();
-        btnDelete = new JButton();
         btnClose = new JButton();
 
         //======== this ========
@@ -142,14 +152,14 @@ public class MailContentView extends JFrame {
                 ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 85, 80};
                 ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0, 0.0};
 
-                //---- btnDelete ----
-                btnDelete.setText("Delete");
-                buttonBar.add(btnDelete, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 5), 0, 0));
-
                 //---- btnClose ----
                 btnClose.setText("Close");
+                btnClose.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        btnCloseMouseClicked(e);
+                    }
+                });
                 buttonBar.add(btnClose, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 0, 0), 0, 0));
@@ -176,7 +186,6 @@ public class MailContentView extends JFrame {
     private JScrollPane scrollPane1;
     private JTextArea txtAreaContent;
     private JPanel buttonBar;
-    private JButton btnDelete;
     private JButton btnClose;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
