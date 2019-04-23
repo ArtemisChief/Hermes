@@ -4,38 +4,99 @@
 
 package view;
 
+import java.awt.event.*;
+import controller.ConnectionController;
+import controller.MailController;
+import model.MailModel;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 /**
  * @author Chief
  */
 public class MailConnectionView extends JFrame {
 
+    private ConnectionController connectionController;
+    private MailController mailController;
+
     public MailConnectionView() {
         initComponents();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+
     }
 
     private void sendBtnActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        connectionController.checkConnection(connectionController.getSMTPConnection());
+        mailController.sendMail(toTxtField.getText(),subjectTxtField.getText(),fromTxtField.getText(),contentTxtArea.getText());
     }
 
     private void mailTableMouseClicked(MouseEvent e) {
+
+        connectionController.checkConnection(connectionController.getPOP3Connection());
+        MailModel mail=mailController.readMail(Integer.parseInt(mailTable.getValueAt(mailTable.getSelectedRow(),0).toString()));
+        String content;
+        if(mail==null)
+            content="读取邮件时出现错误！";
+        else
+            content="Subject: "+mail.getSubject()+"\n"+
+                    "From: "+mail.getFrom()+"\n"+
+                    "To: "+mail.getTo()+"\n"+
+                    "Date: "+mail.getDate()+"\n"+
+                    mail.getContent();
+        JFrame jf = new JFrame();
+        jf.setSize(800, 600);
+        JTextArea  jTextArea =new JTextArea(content);
+        jf.add(jTextArea);
+        jf.setVisible(true);
+
+    }
+
+    private void submitActionPerformed(ActionEvent e) {
+
+        if(popPortTxtField.getText().equals("") || smtpPortTxtField.getText().equals("")||popTxtField.getText().equals("")||smtpTxtField.getText().equals("")||mailTxtField.getText().equals("")||pwdTxtField.getText().equals("")){
+            JOptionPane.showMessageDialog(null,"输入不能为空！！！");
+
+        }
+        else{
+            connectionController = new ConnectionController(popTxtField.getText(),Integer.parseInt(popPortTxtField.getText()),smtpTxtField.getText(),Integer.parseInt(smtpPortTxtField.getText()),mailTxtField.getText(),pwdTxtField.getText());
+        }
+        connectionController.checkConnection(connectionController.getPOP3Connection());
+        mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
+        mailController.receiveAllMail();
+        ArrayList<MailModel> mailBox=mailController.getMailBox();
+        Vector name = new Vector();
+        name.add("MailIndex");
+        name.add("From");
+        name.add("Subject");
+        name.add("Time");
+        Vector data=new Vector();
+        for(int i=0;i<mailBox.size();i++){
+            data.add(mailBox.get(i).getHeadInfo());
+        }
+        DefaultTableModel model = new DefaultTableModel(){
+            public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        };
+        model.setDataVector(data,name);
+        mailTable.setModel(model);
         // TODO add your code here
     }
 
-
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - alex
+        // Generated using JFormDesigner Evaluation license - daikan
         tabbedPane2 = new JTabbedPane();
         composePanel = new JPanel();
         toTxtField = new JTextField();
@@ -64,6 +125,7 @@ public class MailConnectionView extends JFrame {
         label9 = new JLabel();
         label10 = new JLabel();
         smtpPortTxtField = new JTextField();
+        submit = new JButton();
 
         //======== this ========
         setResizable(false);
@@ -179,8 +241,8 @@ public class MailConnectionView extends JFrame {
                             .addGroup(composePanelLayout.createParallelGroup()
                                 .addGroup(composePanelLayout.createSequentialGroup()
                                     .addComponent(label3)
-                                    .addGap(0, 338, Short.MAX_VALUE))
-                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))
+                                    .addGap(0, 347, Short.MAX_VALUE))
+                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label4)
@@ -335,6 +397,10 @@ public class MailConnectionView extends JFrame {
                 smtpPortTxtField.setBorder(new EtchedBorder());
                 smtpPortTxtField.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
+                //---- submit ----
+                submit.setText("\u63d0\u4ea4");
+                submit.addActionListener(e -> submitActionPerformed(e));
+
                 GroupLayout settingPanelLayout = new GroupLayout(settingPanel);
                 settingPanel.setLayout(settingPanelLayout);
                 settingPanelLayout.setHorizontalGroup(
@@ -366,6 +432,10 @@ public class MailConnectionView extends JFrame {
                                 .addComponent(smtpPortTxtField, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                                 .addComponent(popPortTxtField, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
                             .addContainerGap(64, Short.MAX_VALUE))
+                        .addGroup(GroupLayout.Alignment.TRAILING, settingPanelLayout.createSequentialGroup()
+                            .addContainerGap(834, Short.MAX_VALUE)
+                            .addComponent(submit, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+                            .addGap(81, 81, 81))
                 );
                 settingPanelLayout.setVerticalGroup(
                     settingPanelLayout.createParallelGroup()
@@ -388,7 +458,9 @@ public class MailConnectionView extends JFrame {
                                 .addComponent(label8)
                                 .addComponent(pwdTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(mailTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addContainerGap(403, Short.MAX_VALUE))
+                            .addGap(30, 30, 30)
+                            .addComponent(submit)
+                            .addContainerGap(352, Short.MAX_VALUE))
                 );
             }
             tabbedPane2.addTab("Setting", settingPanel);
@@ -400,7 +472,7 @@ public class MailConnectionView extends JFrame {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - alex
+    // Generated using JFormDesigner Evaluation license - daikan
     private JTabbedPane tabbedPane2;
     private JPanel composePanel;
     private JTextField toTxtField;
@@ -429,5 +501,6 @@ public class MailConnectionView extends JFrame {
     private JLabel label9;
     private JLabel label10;
     private JTextField smtpPortTxtField;
+    private JButton submit;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
