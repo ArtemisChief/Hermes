@@ -34,9 +34,7 @@ public class MailConnectionView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         if (readSetting()) {
-            isConnected = true;
-            mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
-            Thread thread= new Thread(() -> fillReceivedMailTalbe());
+            Thread thread= new Thread(() -> fillReceivedMailTable());
             thread.start();
         }
 
@@ -56,6 +54,8 @@ public class MailConnectionView extends JFrame {
             reader.close();
 
             connectionController = new ConnectionController(pop, popPort, smtp, smtpPort, username, password);
+            mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
+            isConnected = true;
 
             popTxtField.setText(pop);
             popPortTxtField.setText(Integer.toString(popPort));
@@ -79,7 +79,7 @@ public class MailConnectionView extends JFrame {
             String smtp = smtpTxtField.getText();
             int smtpPort = Integer.parseInt(smtpPortTxtField.getText());
             String username = mailTxtField.getText();
-            String password = pwdTxtField.getPassword().toString();
+            String password = String.valueOf(pwdTxtField.getPassword());
 
             StringBuilder stringBuilder = new StringBuilder(pop);
             stringBuilder.append("\n").append(popPort).append("\n").append(smtp).append("\n").append(smtpPort).append("\n").append(username).append("\n").append(password);
@@ -88,6 +88,9 @@ public class MailConnectionView extends JFrame {
             writer.close();
 
             connectionController = new ConnectionController(pop, popPort, smtp, smtpPort, username, password);
+            mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
+            isConnected = true;
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,13 +98,13 @@ public class MailConnectionView extends JFrame {
         }
     }
 
-    private void fillReceivedMailTalbe() {
+    private void fillReceivedMailTable() {
         connectionController.checkConnection(connectionController.getPOP3Connection());
         mailController.receiveMailAmount();
 
         connectionController.checkConnection(connectionController.getPOP3Connection());
         if (mailController.mailLogin()) {
-            while (mailController.getCurrentReading() != 1800) {
+            while (mailController.getCurrentReading() != 1700) {
                 mailController.receiveMail();
             }
         }
@@ -146,8 +149,8 @@ public class MailConnectionView extends JFrame {
             JOptionPane.showMessageDialog(null, "Setting error", "Error", JOptionPane.ERROR_MESSAGE);
             isConnected = false;
         } else {
-            isConnected = true;
-            fillReceivedMailTalbe();
+            Thread thread= new Thread(() -> fillReceivedMailTable());
+            thread.start();
         }
     }
 

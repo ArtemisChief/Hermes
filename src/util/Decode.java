@@ -98,7 +98,7 @@ public class Decode {
 
     public static String HeaderDecode(String str) {
         while (str.contains("=?")) {
-            int end = str.lastIndexOf("?=");
+            int end = str.indexOf("?=",str.indexOf("=?")+2);
             //base64解码
             if (str.contains("?B?")) {
                 int start = str.indexOf("?B?");
