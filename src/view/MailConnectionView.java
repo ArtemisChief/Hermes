@@ -36,7 +36,8 @@ public class MailConnectionView extends JFrame {
         if (readSetting()) {
             isConnected = true;
             mailController = new MailController(connectionController.getPOP3Connection(), connectionController.getSMTPConnection());
-            fillReceivedMailTalbe();
+            Thread thread= new Thread(() -> fillReceivedMailTalbe());
+            thread.start();
         }
 
     }
