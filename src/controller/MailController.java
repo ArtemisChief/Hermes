@@ -6,6 +6,7 @@ import util.Decode;
 import util.Encode;
 
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -114,11 +115,20 @@ public class MailController {
             mailBox.add(mail);
             currentReading--;
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            mailBox.add(new MailModel(-1,"","","",""));
-            currentReading--;
-            return false;
+        } catch (ParseException pe) {
+            try {
+                Date date = new SimpleDateFormat("d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(sDate);
+                MailModel mail = new MailModel(currentReading, to, subject, from, date);
+                mailBox.add(mailAmount - currentReading, mail);
+                currentReading--;
+                return true;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                mailBox.add(new MailModel(-1,"","","",""));
+                currentReading--;
+                return false;
+            }
         }
     }
 
