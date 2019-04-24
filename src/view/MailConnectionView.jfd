@@ -84,8 +84,8 @@ new FormModel {
 					"title": "Compose"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {comp mailScrollPane::t:p:1018:p}"
-					"$verticalGroup": "par l {seq t {space :0:20:x, comp mailScrollPane:::p:491:p}}"
+					"$horizontalGroup": "par l {seq t {space :0:0:x, par t:::p {comp mailScrollPane::::1012:x, comp mailContentScrollPane::::1012:x}, space :::p}}"
+					"$verticalGroup": "par l {seq l {comp mailScrollPane:::p:254:p, space :::p, comp mailContentScrollPane::::251:x}}"
 				} ) {
 					name: "mailBoxPanel"
 					"alignmentX": 0.0f
@@ -101,39 +101,26 @@ new FormModel {
 							"alignmentY": 0.0f
 							"alignmentX": 0.0f
 							"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
-							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
-								add( new java.util.Vector {
-									add( null )
-									add( "aa" )
-									add( "cc" )
-									add( null )
-								} )
-								add( new java.util.Vector {
-									add( null )
-									add( "bb" )
-									add( "dd" )
-									add( null )
-								} )
-							}, new java.util.Vector {
-								add( "MailIndex" )
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+								add( "No" )
 								add( "From" )
 								add( "Subject" )
 								add( "Time" )
 							}, new java.util.Vector {
-								add( null )
+								add( class java.lang.Integer )
 								add( class java.lang.String )
 								add( class java.lang.String )
-								add( class java.util.Date )
+								add( class java.lang.String )
 							}, new java.util.Vector {
 								add( null )
 								add( false )
 								add( false )
 								add( false )
 							}, new java.util.Vector {
-								add( null )
-								add( new com.jformdesigner.model.SwingTableColumn( null, 200, 0, 0, false ) )
-								add( new com.jformdesigner.model.SwingTableColumn( null, 650, 0, 0, false ) )
-								add( new com.jformdesigner.model.SwingTableColumn( null, 137, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 45, 0, 0, true ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 215, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 530, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 207, 0, 0, false ) )
 							} )
 							"selectionMode": 1
 							"autoCreateRowSorter": true
@@ -143,12 +130,23 @@ new FormModel {
 							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "mailTableMouseClicked", true ) )
 						} )
 					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "mailContentScrollPane"
+						add( new FormComponent( "javax.swing.JTextPane" ) {
+							name: "mailTxtPane"
+							"font": new java.awt.Font( "Microsoft YaHei UI", 0, 16 )
+							"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+							"contentType": "text/html"
+							"focusable": false
+							"editable": false
+						} )
+					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Mail Box"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {seq l {space :p:14:p, par l {seq l {par t {comp label5:::p:119:p, comp label6:::p:119:p}, space s:::p, par l {comp smtpTxtField:::p:358:p, comp popTxtField:::::x}, space :p:12:p, par l {comp label10:::p:113:p, comp label9:::p:115:p}}, seq l {comp label7:::p:119:p, space s:::p, comp mailTxtField:::p:358:p, space u:::p, comp label8:::p:113:p}}, space s:::p, par l:::p {comp pwdTxtField::l::300:x, comp smtpPortTxtField::l::300:x, comp popPortTxtField::l::300:x}, space ::64:x}}"
-					"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp label5::b:p::p, comp label9::b:p::p, comp popTxtField::b:p::p, comp popPortTxtField::b:p::p}, space :::p, par b {comp label6::b:p::p, comp smtpTxtField::b:p::p, comp label10::b:p::p, comp smtpPortTxtField::b:p::p}, space :::p, par b {comp label7::b:p::p, comp label8::b:p::p, comp pwdTxtField::b:p::p, comp mailTxtField::b:p::p}, space ::406:x}}"
+					"$horizontalGroup": "par l {seq t {space :p:14:p, par l {seq l {par t {comp label5:::p:119:p, comp label6:::p:119:p}, space s:::p, par l:::p {comp smtpTxtField::::358:x, comp popTxtField::::358:x}}, seq l {comp label7:::p:119:p, space s:::p, par l {comp mailTxtField:::p:358:p, comp saveBtn:::p:99:p}}}, space s:::p, par l {comp label8::l::112:x, comp label10::l::112:x, comp label9::::112:x}, space :::p, par l:::p {comp smtpPortTxtField::l::300:x, comp popPortTxtField::l::300:x, comp pwdTxtField::l::300:x}, space :p:73:p}}"
+					"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp label5::b:p::p, comp popPortTxtField::b:p::p, comp popTxtField::b:p::p, comp label9::b:p::p}, space :::p, par b {comp label6::b:p::p, comp smtpTxtField::b:p::p, comp smtpPortTxtField::b:p::p, comp label10::b:p::p}, space :::p, par b {comp label7::b:p::p, comp mailTxtField::b:p::p, comp label8::b:p::p, comp pwdTxtField::b:p::p}, space s:::p, comp saveBtn:::p::p, space ::363:x}}"
 				} ) {
 					name: "settingPanel"
 					"alignmentY": 0.0f
@@ -189,16 +187,10 @@ new FormModel {
 						"border": #EtchedBorder0
 						"font": #Font0
 					} )
-					add( new FormComponent( "javax.swing.JTextField" ) {
-						name: "pwdTxtField"
-						"border": #EtchedBorder0
-						"font": #Font0
-					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label8"
 						"text": "Password"
 						"horizontalAlignment": 4
-						"labelFor": new FormReference( "pwdTxtField" )
 						"font": #Font0
 					} )
 					add( new FormComponent( "javax.swing.JTextField" ) {
@@ -224,6 +216,15 @@ new FormModel {
 						name: "smtpPortTxtField"
 						"border": #EtchedBorder0
 						"font": #Font0
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "saveBtn"
+						"text": "Save"
+						"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveBtnActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JPasswordField" ) {
+						name: "pwdTxtField"
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Setting"

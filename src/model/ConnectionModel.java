@@ -57,7 +57,7 @@ public class ConnectionModel {
         this.sslSocket = sslSocket;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(this.sslSocket.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(this.sslSocket.getInputStream(), "GBK"));
             writer = new PrintWriter(this.sslSocket.getOutputStream(), true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,14 +82,22 @@ public class ConnectionModel {
         return line;
     }
 
-    public String writeAndReadHead(String str){
+    public String readLine() {
+        try {
+            return reader.readLine();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String writeAndReadHead(String str) {
         writer.println(str);
 
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
             String line;
-            while((line=reader.readLine())!=null&&!line.equals("."))
+            while ((line = reader.readLine()) != null && !line.equals("."))
                 stringBuilder.append(line).append("\n");
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,19 +106,19 @@ public class ConnectionModel {
         return stringBuilder.toString();
     }
 
-    public String writeAndReadContent(String str){
+    public String writeAndReadContent(String str) {
         writer.println(str);
 
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
             String line;
-            boolean emptyline=false;
-            while((line=reader.readLine())!=null) {
+            boolean emptyline = false;
+            while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
-                if(emptyline&&line.equals("."))
+                if (emptyline && line.equals("."))
                     break;
-                emptyline=line.equals("");
+                emptyline = line.equals("");
             }
         } catch (Exception e) {
             e.printStackTrace();
