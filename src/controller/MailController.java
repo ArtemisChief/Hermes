@@ -111,11 +111,13 @@ public class MailController {
         try {
             Date date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(sDate);
             MailModel mail = new MailModel(currentReading, to, subject, from, date);
-            mailBox.add(mailAmount - currentReading, mail);
+            mailBox.add(mail);
             currentReading--;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            mailBox.add(new MailModel(-1,"","","",""));
+            currentReading--;
             return false;
         }
     }

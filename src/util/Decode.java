@@ -111,6 +111,18 @@ public class Decode {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else if(str.contains("?b?")){
+                int start = str.indexOf("?b?");
+                int end = str.indexOf("?=",start+3);
+                String decodeString = str.substring(start + 3, end);
+                BASE64Decoder decoder = new BASE64Decoder();
+                try {
+                    byte[] b = decoder.decodeBuffer(decodeString);
+                    decodeString = new String(b, str.substring(str.indexOf("=?") + 2, str.indexOf("?b?")).toUpperCase());
+                    str = str.replaceFirst("=\\?.*\\?=", decodeString);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             //Quoted-Printable解码
             else if (str.contains("?Q?")) {
@@ -119,6 +131,16 @@ public class Decode {
                 String decodeString = str.substring(start + 3, end);
                 try {
                     decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
+                    str = str.replaceFirst("=\\?.*\\?=", decodeString);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else if(str.contains("?q?")){
+                int start = str.indexOf("?q?");
+                int end = str.indexOf("?=",start+3);
+                String decodeString = str.substring(start + 3, end);
+                try {
+                    decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?q?")).toUpperCase());
                     str = str.replaceFirst("=\\?.*\\?=", decodeString);
                 } catch (Exception e) {
                     e.printStackTrace();

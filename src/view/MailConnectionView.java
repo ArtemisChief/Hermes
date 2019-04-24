@@ -104,7 +104,7 @@ public class MailConnectionView extends JFrame {
 
         connectionController.checkConnection(connectionController.getPOP3Connection());
         if (mailController.mailLogin()) {
-            while (mailController.getCurrentReading() != 1700) {
+            while (mailController.getCurrentReading() != 0) {
                 mailController.receiveMail();
             }
         }
