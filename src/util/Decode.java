@@ -98,10 +98,10 @@ public class Decode {
 
     public static String HeaderDecode(String str) {
         while (str.contains("=?")) {
-            int end = str.indexOf("?=",str.indexOf("=?")+2);
             //base64解码
             if (str.contains("?B?")) {
                 int start = str.indexOf("?B?");
+                int end = str.indexOf("?=",start+3);
                 String decodeString = str.substring(start + 3, end);
                 BASE64Decoder decoder = new BASE64Decoder();
                 try {
@@ -115,6 +115,7 @@ public class Decode {
             //Quoted-Printable解码
             else if (str.contains("?Q?")) {
                 int start = str.indexOf("?Q?");
+                int end = str.indexOf("?=",start+3);
                 String decodeString = str.substring(start + 3, end);
                 try {
                     decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());

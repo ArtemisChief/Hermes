@@ -103,7 +103,7 @@ public class MailController {
                 from = Decode.HeaderDecode(from);
         }
 
-        matcher = Pattern.compile("(?:^|\\n)Date: (.*)\\n").matcher(top);
+        matcher = Pattern.compile("\\nDate: (.*)\\n").matcher(top);
         if (matcher.find()) {
             sDate = matcher.group(1);
         }
