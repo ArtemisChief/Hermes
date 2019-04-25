@@ -88,12 +88,15 @@ public class View extends JFrame {
     }
 
     private void fillReceivedMailTable() {
-        mailController.receiveMailAmount();
+        if (!mailController.receiveMailAmount())
+            JOptionPane.showMessageDialog(null, "Fail to connect mail server, check username or password", "Error", JOptionPane.ERROR_MESSAGE);
 
         mailController.receiveMail(16);
 
         Thread fillThread = new Thread(() -> {
             DefaultTableModel model = (DefaultTableModel) mailTable.getModel();
+            model.setRowCount(0);
+
             BlockingQueue<MailModel> queue = mailController.getQueue();
             try {
                 while (true) {
@@ -111,7 +114,7 @@ public class View extends JFrame {
             if (mailController.sendMail(toTxtField.getText(), subjectTxtField.getText(), fromTxtField.getText(), contentTxtArea.getText()))
                 JOptionPane.showMessageDialog(null, "Sending Success", "Info", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(null, "Fail to send mail, check username or password", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Fail to connect mail server, check username or password", "Error", JOptionPane.ERROR_MESSAGE);
             Thread.currentThread().interrupt();
         });
         thread.start();

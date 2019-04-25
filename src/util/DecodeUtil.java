@@ -99,7 +99,7 @@ public class DecodeUtil {
     }
 
     public static String HeaderDecode(String str) {
-        Matcher m= Pattern.compile("=\\?(.*?)\\?([bBqQ])\\?(.*?)\\?=").matcher(str);
+        Matcher m = Pattern.compile("=\\?(.*?)\\?([bBqQ])\\?(.*?)\\?=").matcher(str);
         if (m.find()) {
             //base64解码
             if (m.group(2).toUpperCase().equals("B")) {
@@ -130,7 +130,7 @@ public class DecodeUtil {
                 }
             }
             return HeaderDecode(str);
-        }else
+        } else
             return str;
 
     }

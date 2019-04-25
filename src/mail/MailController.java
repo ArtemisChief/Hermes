@@ -39,8 +39,6 @@ public class MailController {
         this.SMTPPort = SMTPPort;
         this.username = username;
         this.password = password;
-
-        queue = new LinkedBlockingQueue<>(20);
     }
 
     private Connection POP3Login() {
@@ -91,6 +89,8 @@ public class MailController {
     }
 
     public void receiveMail(int threadAmount) {
+        queue = new LinkedBlockingQueue<>(threadAmount * 2);
+
         for (int i = 0; i < threadAmount; i++) {
             Thread receiveThread = new Thread(() -> {
                 Connection POP3Connection = POP3Login();
@@ -135,7 +135,6 @@ public class MailController {
                                     MailModel mail = new MailModel(count, subject, from, date);
                                     queue.offer(mail);
                                 } catch (Exception e) {
-                                    e.printStackTrace();
                                     queue.offer((new MailModel(-1, "", "", null)));
                                 }
                             }
