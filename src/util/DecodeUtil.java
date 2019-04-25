@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 
-public class Decode {
+public class DecodeUtil {
 
     private final static byte TAB = 0x09;     // /t
     private final static byte LF = 0x0A;     // /n
@@ -102,12 +102,12 @@ public class Decode {
             //base64解码
             if (str.contains("?B?")) {
                 int start = str.indexOf("?B?");
-                int end = str.indexOf("?=",start+3);
+                int end = str.indexOf("?=", start + 3);
                 String decodeString = str.substring(start + 3, end);
                 BASE64Decoder decoder = new BASE64Decoder();
                 try {
                     byte[] b = decoder.decodeBuffer(decodeString);
-                    if(str.substring(str.indexOf("=?") + 2, str.indexOf("?B?")).toUpperCase().contains("GB"))
+                    if (str.substring(str.indexOf("=?") + 2, str.indexOf("?B?")).toUpperCase().contains("GB"))
                         decodeString = new String(b, "GBK");
                     else
                         decodeString = new String(b, str.substring(str.indexOf("=?") + 2, str.indexOf("?B?")).toUpperCase());
@@ -115,14 +115,14 @@ public class Decode {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if(str.contains("?b?")){
+            } else if (str.contains("?b?")) {
                 int start = str.indexOf("?b?");
-                int end = str.indexOf("?=",start+3);
+                int end = str.indexOf("?=", start + 3);
                 String decodeString = str.substring(start + 3, end);
                 BASE64Decoder decoder = new BASE64Decoder();
                 try {
                     byte[] b = decoder.decodeBuffer(decodeString);
-                    if(str.substring(str.indexOf("=?") + 2, str.indexOf("?b?")).toUpperCase().contains("GB"))
+                    if (str.substring(str.indexOf("=?") + 2, str.indexOf("?b?")).toUpperCase().contains("GB"))
                         decodeString = new String(b, "GBK");
                     else
                         decodeString = new String(b, str.substring(str.indexOf("=?") + 2, str.indexOf("?b?")).toUpperCase());
@@ -134,10 +134,10 @@ public class Decode {
             //Quoted-Printable解码
             else if (str.contains("?Q?")) {
                 int start = str.indexOf("?Q?");
-                int end = str.indexOf("?=",start+3);
+                int end = str.indexOf("?=", start + 3);
                 String decodeString = str.substring(start + 3, end);
                 try {
-                    if(str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase().contains("GB"))
+                    if (str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase().contains("GB"))
                         decodeString = Qdecode(decodeString, "GBK");
                     else
                         decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
@@ -145,12 +145,12 @@ public class Decode {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if(str.contains("?q?")){
+            } else if (str.contains("?q?")) {
                 int start = str.indexOf("?q?");
-                int end = str.indexOf("?=",start+3);
+                int end = str.indexOf("?=", start + 3);
                 String decodeString = str.substring(start + 3, end);
                 try {
-                    if(str.substring(str.indexOf("=?") + 2, str.indexOf("?q?")).toUpperCase().contains("GB"))
+                    if (str.substring(str.indexOf("=?") + 2, str.indexOf("?q?")).toUpperCase().contains("GB"))
                         decodeString = Qdecode(decodeString, "GBK");
                     else
                         decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?q?")).toUpperCase());
