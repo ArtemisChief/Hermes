@@ -88,8 +88,10 @@ public class View extends JFrame {
     }
 
     private void fillReceivedMailTable() {
-        if (!mailController.receiveMailAmount())
+        if (!mailController.receiveMailAmount()){
             JOptionPane.showMessageDialog(null, "Fail to connect mail server, check username or password", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         mailController.receiveMail(16);
 
@@ -110,6 +112,11 @@ public class View extends JFrame {
     }
 
     private void sendBtnActionPerformed(ActionEvent e) {
+        if(toTxtField.getText().equals("")||subjectTxtField.getText().equals("")||fromTxtField.getText().equals("")||contentTxtArea.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "incomplete mail, please fill the blank", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+
+        }
         Thread thread = new Thread(() -> {
             if (mailController.sendMail(toTxtField.getText(), subjectTxtField.getText(), fromTxtField.getText(), contentTxtArea.getText()))
                 JOptionPane.showMessageDialog(null, "Sending Success", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -126,7 +133,7 @@ public class View extends JFrame {
             Thread thread = new Thread(() -> {
                 String content = mailController.getMailContent(Integer.parseInt(mailTable.getValueAt(mailTable.getSelectedRow(), 0).toString()));
                 if (content == null)
-                    content = "读取邮件时出现错误！";
+                    content = "there is an error occur when getting the mail！";
                 else
                     content = "Subject: " + mailTable.getValueAt(mailTable.getSelectedRow(), 2) + "<br>" +
                             "From: " + mailTable.getValueAt(mailTable.getSelectedRow(), 1) + "<br>" +
@@ -140,12 +147,18 @@ public class View extends JFrame {
     }
 
     private void saveBtnActionPerformed(ActionEvent e) {
+        if(popTxtField.getText().equals("")||popPortTxtField.getText().equals("")||smtpTxtField.getText().equals("")||smtpPortTxtField.getText().equals("")||pwdTxtField.getPassword().toString().equals("")||mailTxtField.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "incomplete settings, please fill the blank", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+
+        }
         writeSetting();
         fillReceivedMailTable();
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner Evaluation license - alex
         tabbedPane2 = new JTabbedPane();
         composePanel = new JPanel();
         toTxtField = new JTextField();
@@ -195,6 +208,14 @@ public class View extends JFrame {
             {
                 composePanel.setAlignmentY(0.0F);
                 composePanel.setAlignmentX(0.0F);
+
+                // JFormDesigner evaluation mark
+                composePanel.setBorder(new javax.swing.border.CompoundBorder(
+                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                        "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                        javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                        java.awt.Color.red), composePanel.getBorder())); composePanel.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+
 
                 //---- toTxtField ----
                 toTxtField.setBorder(new EtchedBorder());
@@ -284,8 +305,8 @@ public class View extends JFrame {
                             .addGroup(composePanelLayout.createParallelGroup()
                                 .addGroup(composePanelLayout.createSequentialGroup()
                                     .addComponent(label3)
-                                    .addGap(0, 347, Short.MAX_VALUE))
-                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
+                                    .addGap(0, 338, Short.MAX_VALUE))
+                                .addComponent(contentScrollPane, GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(composePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(label4)
@@ -376,11 +397,11 @@ public class View extends JFrame {
                 mailBoxPanel.setLayout(mailBoxPanelLayout);
                 mailBoxPanelLayout.setHorizontalGroup(
                     mailBoxPanelLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, mailBoxPanelLayout.createSequentialGroup()
+                        .addGroup(mailBoxPanelLayout.createSequentialGroup()
                             .addGap(0, 0, Short.MAX_VALUE)
-                            .addGroup(mailBoxPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(mailScrollPane, GroupLayout.DEFAULT_SIZE, 1012, Short.MAX_VALUE)
-                                .addComponent(mailContentScrollPane, GroupLayout.DEFAULT_SIZE, 1012, Short.MAX_VALUE))
+                            .addGroup(mailBoxPanelLayout.createParallelGroup()
+                                .addComponent(mailContentScrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 1012, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(mailScrollPane, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 1012, GroupLayout.PREFERRED_SIZE))
                             .addContainerGap())
                 );
                 mailBoxPanelLayout.setVerticalGroup(
@@ -514,7 +535,7 @@ public class View extends JFrame {
                                 .addComponent(pwdTxtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addGap(18, 18, 18)
                             .addComponent(saveBtn)
-                            .addContainerGap(363, Short.MAX_VALUE))
+                            .addContainerGap(352, Short.MAX_VALUE))
                 );
             }
             tabbedPane2.addTab("Setting", settingPanel);
@@ -526,6 +547,7 @@ public class View extends JFrame {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - alex
     private JTabbedPane tabbedPane2;
     private JPanel composePanel;
     private JTextField toTxtField;
