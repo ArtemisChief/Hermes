@@ -84,27 +84,16 @@ public class MailController {
         String to = "", subject = "", from = "", sDate = "";
 
         Matcher matcher = Pattern.compile("To: (.*\\r?\\n(\\s+.*\\r?\\n)*)").matcher(top);
-        if (matcher.find()) {
-            to = matcher.group(1).replaceAll("\\n\\s+", "");
-            if (to.contains("=?"))
-                to = Decode.HeaderDecode(to);
-        }
+        to=readMailHead(matcher);
 
         matcher = Pattern.compile("Subject: (.*\\r?\\n(\\s+.*\\r?\\n)*)").matcher(top);
-        if (matcher.find()) {
-            subject = matcher.group(1).replaceAll("\\n\\s+", "");
-            if (subject.contains("=?"))
-                subject = Decode.HeaderDecode(subject);
-        }
+        subject=readMailHead(matcher);
 
         matcher = Pattern.compile("From: (.*\\r?\\n(\\s+.*\\r?\\n)*)").matcher(top);
-        if (matcher.find()) {
-            from = matcher.group(1).replaceAll("\\n\\s+", "");
-            if (from.contains("=?"))
-                from = Decode.HeaderDecode(from);
-        }
+        from=readMailHead(matcher);
 
-        matcher = Pattern.compile("\\nDate: (.*)\\n").matcher(top);
+
+        matcher = Pattern.compile("\\nDate:\\s*(.*)(\\s*\\(.*\\))*\\n").matcher(top);
         if (matcher.find()) {
             sDate = matcher.group(1);
         }
@@ -115,19 +104,35 @@ public class MailController {
             mailBox.add(mail);
             currentReading--;
             return true;
-        } catch (ParseException pe) {
+        } catch (ParseException pe1) {
             try {
                 Date date = new SimpleDateFormat("d MMM yyyy HH:mm:ss Z", Locale.ENGLISH).parse(sDate);
                 MailModel mail = new MailModel(currentReading, to, subject, from, date);
                 mailBox.add(mailAmount - currentReading, mail);
                 currentReading--;
                 return true;
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                mailBox.add(new MailModel(-1,"","","",""));
-                currentReading--;
-                return false;
+            }catch (ParseException pe2) {
+                try {
+                    Date date = new SimpleDateFormat("EEE,MMM d yyyy HH:mm:ss Z", Locale.ENGLISH).parse(sDate);
+                    MailModel mail = new MailModel(currentReading, to, subject, from, date);
+                    mailBox.add(mailAmount - currentReading, mail);
+                    currentReading--;
+                    return true;
+                }catch (ParseException pe3) {
+                    try {
+                        Date date = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss X", Locale.ENGLISH).parse(sDate);
+                        MailModel mail = new MailModel(currentReading, to, subject, from, date);
+                        mailBox.add(mailAmount - currentReading, mail);
+                        currentReading--;
+                        return true;
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        mailBox.add(new MailModel(-1,"","","",""));
+                        currentReading--;
+                        return false;
+                    }
+                }
             }
         }
     }
@@ -237,5 +242,18 @@ public class MailController {
 
     public int getCurrentReading() {
         return currentReading;
+    }
+
+    public String readMailHead(Matcher m){
+        String[] headInfo;
+        String info="";
+        if (m.find()) {
+            headInfo = m.group(1).split("\\n\\s+");
+            for(String str:headInfo){
+                String temp=Decode.HeaderDecode(str.trim());
+                info+=temp;
+            }
+        }
+        return info;
     }
 }
