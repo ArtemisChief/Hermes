@@ -1,6 +1,6 @@
 package util;
 
-import Decoder.BASE64Decoder;
+import sun.misc.BASE64Decoder;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;

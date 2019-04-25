@@ -101,7 +101,14 @@ new FormModel {
 							"alignmentY": 0.0f
 							"alignmentX": 0.0f
 							"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
-							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+								add( new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+									add( null )
+								} )
+							}, new java.util.Vector {
 								add( "No" )
 								add( "From" )
 								add( "Subject" )
@@ -117,9 +124,9 @@ new FormModel {
 								add( false )
 								add( false )
 							}, new java.util.Vector {
-								add( new com.jformdesigner.model.SwingTableColumn( null, 45, 0, 0, true ) )
-								add( new com.jformdesigner.model.SwingTableColumn( null, 215, 0, 0, false ) )
-								add( new com.jformdesigner.model.SwingTableColumn( null, 530, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 35, 0, 0, true ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 235, 0, 0, false ) )
+								add( new com.jformdesigner.model.SwingTableColumn( null, 520, 0, 0, false ) )
 								add( new com.jformdesigner.model.SwingTableColumn( null, 207, 0, 0, false ) )
 							} )
 							"selectionMode": 1
