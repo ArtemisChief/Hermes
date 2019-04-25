@@ -5,8 +5,10 @@ import Decoder.BASE64Decoder;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class Decode {
+public class DecodeUtil {
 
     private final static byte TAB = 0x09;     // /t
     private final static byte LF = 0x0A;     // /n
@@ -97,34 +99,40 @@ public class Decode {
     }
 
     public static String HeaderDecode(String str) {
-        while (str.contains("=?")) {
-            int end = str.indexOf("?=");
+        Matcher m = Pattern.compile("=\\?(.*?)\\?([bBqQ])\\?(.*?)\\?=").matcher(str);
+        if (m.find()) {
             //base64解码
-            if (str.contains("?B?")) {
-                int start = str.indexOf("?B?");
-                String decodeString = str.substring(start + 3, end);
+            if (m.group(2).toUpperCase().equals("B")) {
+                String decodeString = m.group(3);
                 BASE64Decoder decoder = new BASE64Decoder();
                 try {
                     byte[] b = decoder.decodeBuffer(decodeString);
-                    decodeString = new String(b, str.substring(str.indexOf("=?") + 2, str.indexOf("?B?")).toUpperCase());
-                    str = str.replaceFirst("=\\?.*\\?=", decodeString);
+                    if (m.group(1).toUpperCase().contains("GB"))
+                        decodeString = new String(b, "GBK");
+                    else
+                        decodeString = new String(b, m.group(1).toUpperCase());
+                    str = str.replaceFirst("=\\?.*?\\?[bB]\\?.*?\\?=", Matcher.quoteReplacement(decodeString));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             //Quoted-Printable解码
-            else if (str.contains("?Q?")) {
-                int start = str.indexOf("?Q?");
-                String decodeString = str.substring(start + 3, end);
+            else if (m.group(2).toUpperCase().equals("Q")) {
+                String decodeString = m.group(3);
                 try {
-                    decodeString = Qdecode(decodeString, str.substring(str.indexOf("=?") + 2, str.indexOf("?Q?")).toUpperCase());
-                    str = str.replaceFirst("=\\?.*\\?=", decodeString);
+                    if (m.group(1).toUpperCase().contains("GB"))
+                        decodeString = Qdecode(decodeString, "GBK");
+                    else
+                        decodeString = Qdecode(decodeString, m.group(1).toUpperCase());
+                    str = str.replaceFirst("=\\?.*?\\?[qQ]\\?.*?\\?=", Matcher.quoteReplacement(decodeString));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }
-        return str;
+            return HeaderDecode(str);
+        } else
+            return str;
+
     }
 
     public static String ContentDecode(String contentInfo, String content) {
