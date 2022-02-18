@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "6.0.2.0.116" Java: "1.8.0_152-release" encoding: "UTF-8"
+JFDML JFormDesigner: "6.0.6.2.195" Java: "1.8.0_152-release" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -16,7 +16,7 @@ new FormModel {
 				"font": new java.awt.Font( "Microsoft YaHei UI", 0, 14 )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 					"$horizontalGroup": "par l {seq l {space :::p, par l {par t:::p {comp label1::::62:x, comp label3::t::62:x, comp label4::t::62:x}, comp label2::l:p:62:p}, space :18:18:p, par l:::p {comp sendBtn:::p:82:p, comp contentScrollPane::l::904:x, comp fromTxtField::l::904:x, comp subjectTxtField::l::904:x, comp toTxtField::l::904:x}, space ::28:x}}"
-					"$verticalGroup": "par l {seq {space :p:10:p, par b {comp label1::b:p::p, comp toTxtField::b:p::p}, space :::p, par b {comp label2::b:p::p, comp subjectTxtField::b:p::p}, space :::p, par l {seq {comp label3:::p::p, space :0:347:x}, comp contentScrollPane::::366:x}, space :::p, par b {comp label4::b:p::p, comp fromTxtField::b:p::p}, space :::p, comp sendBtn:::p::p, space :::p}}"
+					"$verticalGroup": "par l {seq {space :p:10:p, par b {comp label1::b:p::p, comp toTxtField::b:p::p}, space :::p, par b {comp label2::b:p::p, comp subjectTxtField::b:p::p}, space :::p, par l {seq {comp label3:::p::p, space :0:338:x}, comp contentScrollPane::::357:x}, space :::p, par b {comp label4::b:p::p, comp fromTxtField::b:p::p}, space :::p, comp sendBtn:::p::p, space :::p}}"
 				} ) {
 					name: "composePanel"
 					"alignmentY": 0.0f
@@ -84,7 +84,7 @@ new FormModel {
 					"title": "Compose"
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {seq t {space :0:0:x, par t:::p {comp mailScrollPane::::1012:x, comp mailContentScrollPane::::1012:x}, space :::p}}"
+					"$horizontalGroup": "par l {seq {space :0:0:x, par l {comp mailContentScrollPane::t:p:1012:p, comp mailScrollPane::t:p:1012:p}, space :::p}}"
 					"$verticalGroup": "par l {seq l {comp mailScrollPane:::p:254:p, space :::p, comp mailContentScrollPane::::251:x}}"
 				} ) {
 					name: "mailBoxPanel"
@@ -153,7 +153,7 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 					"$horizontalGroup": "par l {seq t {space :p:14:p, par l {seq l {par t {comp label5:::p:119:p, comp label6:::p:119:p}, space s:::p, par l:::p {comp smtpTxtField::::358:x, comp popTxtField::::358:x}}, seq l {comp label7:::p:119:p, space s:::p, par l {comp mailTxtField:::p:358:p, comp saveBtn:::p:99:p}}}, space s:::p, par l {comp label8::l::112:x, comp label10::l::112:x, comp label9::::112:x}, space :::p, par l:::p {comp smtpPortTxtField::l::300:x, comp popPortTxtField::l::300:x, comp pwdTxtField::l::300:x}, space :p:73:p}}"
-					"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp label5::b:p::p, comp popPortTxtField::b:p::p, comp popTxtField::b:p::p, comp label9::b:p::p}, space :::p, par b {comp label6::b:p::p, comp smtpTxtField::b:p::p, comp smtpPortTxtField::b:p::p, comp label10::b:p::p}, space :::p, par b {comp label7::b:p::p, comp mailTxtField::b:p::p, comp label8::b:p::p, comp pwdTxtField::b:p::p}, space s:::p, comp saveBtn:::p::p, space ::363:x}}"
+					"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp label5::b:p::p, comp popPortTxtField::b:p::p, comp popTxtField::b:p::p, comp label9::b:p::p}, space :::p, par b {comp label6::b:p::p, comp smtpTxtField::b:p::p, comp smtpPortTxtField::b:p::p, comp label10::b:p::p}, space :::p, par b {comp label7::b:p::p, comp mailTxtField::b:p::p, comp label8::b:p::p, comp pwdTxtField::b:p::p}, space s:::p, comp saveBtn:::p::p, space ::352:x}}"
 				} ) {
 					name: "settingPanel"
 					"alignmentY": 0.0f
